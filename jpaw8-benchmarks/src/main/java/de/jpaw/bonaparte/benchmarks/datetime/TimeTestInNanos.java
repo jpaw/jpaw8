@@ -12,7 +12,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 // Benchmarks to investigate how much performance of getting the current time
 
-//java -jar target/bonaparte-benchmarks-java8.jar -i 3 -f 3 -wf 1 -wi 3
+//java -jar target/jpaw8-benchmarks.jar -i 3 -f 3 -wf 1 -wi 3 ".*TimeTestInNanos.*"
 //Benchmark                                   Mode  Samples    Score  Score error  Units
 //d.j.b.b.d.TimeTestInNanos.javaNow           avgt        9  219.191        4.943  ns/op
 //d.j.b.b.d.TimeTestInNanos.javaNowInstant    avgt        9   41.318        0.536  ns/op

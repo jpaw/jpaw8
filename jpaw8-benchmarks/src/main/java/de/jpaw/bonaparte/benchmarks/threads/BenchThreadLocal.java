@@ -13,7 +13,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 // Benchmarks to investigate how much performance the new lambda take
 
-//java -jar target/bonaparte-benchmarks-java8.jar -i 3 -f 3 -wf 1 -wi 3 ".*Thread.*"
+//java -jar target/jpaw8-benchmarks.jar -i 3 -f 3 -wf 1 -wi 3 ".*BenchThreadLocal.*"
 //
 //Benchmark                                     Mode  Samples    Score  Score error  Units
 //d.j.b.b.t.BenchThreadLocal.javaAtomic         avgt        9  530.012        1.923  ns/op

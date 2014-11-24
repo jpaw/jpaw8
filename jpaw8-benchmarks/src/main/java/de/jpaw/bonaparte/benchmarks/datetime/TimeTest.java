@@ -8,7 +8,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 // Benchmarks to investigate how much performance of getting the current time
 
-//java -jar target/bonaparte-benchmarks.jar -i 3 -f 3 -wf 1 -wi 3
+//java -jar target/jpaw8-benchmarks.jar -i 3 -f 3 -wf 1 -wi 3 ".*TimeTest.*"
 //# Run complete. Total time: 00:03:31
 //
 //Benchmark                             Mode   Samples         Mean   Mean error    Units

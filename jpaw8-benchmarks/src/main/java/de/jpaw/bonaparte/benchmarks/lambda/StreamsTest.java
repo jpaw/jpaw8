@@ -16,7 +16,7 @@ import de.jpaw.batch.endpoints.BatchRange;
 
 // Benchmarks to investigate how much performance the new lambda take
 
-//java -jar target/bonaparte-benchmarks-java8.jar -i 3 -f 3 -wf 1 -wi 3 ".*Stream.*"
+//java -jar target/jpaw8-benchmarks.jar -i 3 -f 3 -wf 1 -wi 3 ".*StreamsTest.*"
 //# Run complete. Total time: 00:02:31
 
 //Benchmark                                Mode  Samples       Score       Error  Units
