@@ -1,6 +1,7 @@
 package de.jpaw8.batch.integrationtests;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -27,6 +28,14 @@ public class SingleRequest {
         @Override
         public void accept(Object t) {
             ++num;
+        }
+    }
+    static private class ParallelCounter implements Consumer<Object> {
+        AtomicInteger num = new AtomicInteger();
+        
+        @Override
+        public void accept(Object t) {
+            num.incrementAndGet();
         }
     }
     static private class Delay implements Predicate<Object> {
@@ -113,6 +122,18 @@ public class SingleRequest {
         sequence.runAll();
         Date end = new Date();
         Assert.assertEquals(a.num, 10);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+    
+    @Test
+    public void testCounterDelays4Parallel() throws Exception {
+        ParallelCounter a = new ParallelCounter();
+        Delay d = new Delay();
+        Date start = new Date();
+        Batch sequence = new BatchRange(1L, 12L).parallel(4).filter(d).forEach(a);
+        sequence.runAll();
+        Date end = new Date();
+        Assert.assertEquals(a.num.get(), 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
 }

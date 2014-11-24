@@ -8,11 +8,13 @@ import java.util.function.Predicate;
 
 import de.jpaw8.batch.api.cmdline.impl.ContributorDelegator;
 import de.jpaw8.batch.api.stream.impl.BatchStreamConsumer;
+import de.jpaw8.batch.api.stream.impl.BatchStreamDevNullConsumer;
 import de.jpaw8.batch.api.stream.impl.BatchStreamFilter;
 import de.jpaw8.batch.api.stream.impl.BatchStreamIntFilter;
 import de.jpaw8.batch.api.stream.impl.BatchStreamIterable;
 import de.jpaw8.batch.api.stream.impl.BatchStreamMap;
 import de.jpaw8.batch.api.stream.impl.BatchStreamNewThread;
+import de.jpaw8.batch.api.stream.impl.BatchStreamObjIntConsumer;
 import de.jpaw8.batch.api.stream.impl.BatchStreamObjIntFilter;
 import de.jpaw8.batch.api.stream.impl.BatchStreamObjIntMap;
 import de.jpaw8.function.ObjIntFunction;
@@ -74,11 +76,28 @@ public abstract class BatchStream<E> extends ContributorDelegator implements Bat
     public Batch forEach(Consumer<? super E> consumer) {
         return new BatchStreamConsumer<E>(this, consumer);
     }
+    public Batch forEach(ObjIntConsumer<? super E> consumer) {
+        return new BatchStreamObjIntConsumer<E>(this, consumer);
+    }
+
+    // discard
+    public Batch discard() {
+        return new BatchStreamDevNullConsumer<E>(this);
+    }
+    // add a discard and run it right away.
+    public void run() throws Exception {
+        discard().run();       // just a synonym
+    }
+    
+    
     
     // thread splitter
     
     public <F> BatchStream<E> newThread() {
         return new BatchStreamNewThread<E>(this, 1024);
+    }
+    public <F> BatchStream<E> parallel(int numThreads) {
+        return new BatchStreamNewThread<E>(this, 1024, numThreads);
     }
 }
 
