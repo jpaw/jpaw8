@@ -1,9 +1,8 @@
 package de.jpaw8.batch.consumers;
 
-import de.jpaw8.batch.api.BatchWriter;
-import de.jpaw8.batch.consumers.base.BatchWriterTextFileAbstract;
+import de.jpaw8.batch.consumers.impl.BatchWriterTextFileAbstract;
 
-public class BatchWriterTextFile extends BatchWriterTextFileAbstract implements BatchWriter<String> {
+public class BatchWriterTextFile extends BatchWriterTextFileAbstract<String> {
 
     public BatchWriterTextFile(String header, String footer) {
         super(header, footer);
@@ -13,7 +12,7 @@ public class BatchWriterTextFile extends BatchWriterTextFileAbstract implements 
     }
 
     @Override
-    public void apply(int no, String response) throws Exception {
+    public void store(String response, int no) {
         super.write(response);
     }
 }

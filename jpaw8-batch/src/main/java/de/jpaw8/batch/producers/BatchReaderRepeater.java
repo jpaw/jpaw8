@@ -2,44 +2,37 @@ package de.jpaw8.batch.producers;
 
 import java.util.function.ObjIntConsumer;
 
-import com.martiansoftware.jsap.FlaggedOption;
 import com.martiansoftware.jsap.JSAP;
-import com.martiansoftware.jsap.JSAPResult;
 
-import de.jpaw8.batch.api.BatchReader;
+import de.jpaw.cmdline.CmdlineParserContext;
+import de.jpaw8.batch.producers.impl.BatchReaderAbstract;
 
 /** Batch reader for testing. This one repeats the provided input a specified number of times,
  *  and optionally waits between data production. */
-public class BatchReaderRepeater<E> implements BatchReader<E> {
+public class BatchReaderRepeater<E> extends BatchReaderAbstract<E> {
+    static private final String OPTION = "num";
     private final E objectToRepeat;
     private int numRepeats = 1;
-    private int delayInMillis = 0;
+    private final CmdlineParserContext ctx;
+    
+    public BatchReaderRepeater(E objectToRepeat, int num) {
+        this.objectToRepeat = objectToRepeat;
+        this.numRepeats = num;
+        ctx = null;
+    }
     
     public BatchReaderRepeater(E objectToRepeat) {
         this.objectToRepeat = objectToRepeat;
-    }
-    
-    @Override
-    public void addCommandlineParameters(JSAP params) throws Exception {
-        params.registerParameter(new FlaggedOption("num", JSAP.INTEGER_PARSER, "1", JSAP.NOT_REQUIRED, 'n', "num", "number of repetitions"));
-        params.registerParameter(new FlaggedOption("indelay", JSAP.INTEGER_PARSER, "0", JSAP.NOT_REQUIRED, JSAP.NO_SHORTFLAG, "in-delay", "number of ms delay between repetitions"));
-    }
-
-    @Override
-    public void evalCommandlineParameters(JSAPResult params) throws Exception {
-        delayInMillis = params.getInt("indelay");
-        numRepeats = params.getInt("num");
+        ctx = CmdlineParserContext.getContext();
+        ctx.addFlaggedOption(OPTION, JSAP.INTEGER_PARSER, "1", JSAP.NOT_REQUIRED, 'n', "number of repetitions");
     }
 
     @Override
     public void produceTo(ObjIntConsumer<? super E> whereToPut) throws Exception {
+        if (ctx != null)
+            numRepeats = ctx.getInt(OPTION);
         for (int i = 1; i <= numRepeats; ++i) {
-            Thread.sleep(delayInMillis);
             whereToPut.accept(objectToRepeat, i);
         }
-    }
-    
-    @Override
-    public void close() throws Exception {
     }
 }

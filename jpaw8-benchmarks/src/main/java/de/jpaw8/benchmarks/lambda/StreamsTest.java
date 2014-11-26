@@ -12,7 +12,7 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import de.jpaw8.batch.api.Batch;
-import de.jpaw8.batch.producers.BatchRange;
+import de.jpaw8.batch.producers.BatchReaderRange;
 
 // Benchmarks to investigate how much performance the new lambda take
 
@@ -49,13 +49,13 @@ public class StreamsTest {
 
     @Benchmark
     public void jpawStreamMap(Blackhole bh) throws Exception {
-        Batch sequence = new BatchRange(1, NUM).map(l -> l * l).forEach(l -> bh.consume(l));
+        Batch sequence = new BatchReaderRange(1, NUM).map(l -> l * l).forEach(l -> bh.consume(l));
         sequence.run();
     }
 
     @Benchmark
     public void jpawStreamSetup(Blackhole bh) throws Exception {
-        Batch sequence = new BatchRange(1,  10).map(l -> l * l).forEach(l -> bh.consume(l));
+        Batch sequence = new BatchReaderRange(1,  10).map(l -> l * l).forEach(l -> bh.consume(l));
         sequence.run();
     }
 

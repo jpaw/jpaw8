@@ -5,61 +5,62 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.martiansoftware.jsap.JSAPException;
-import com.martiansoftware.jsap.JSAPResult;
-import com.martiansoftware.jsap.Parameter;
-import com.martiansoftware.jsap.SimpleJSAP;
-
-import de.jpaw8.batch.api.cmdline.impl.ContributorDelegator;
-
-public abstract class Batch extends ContributorDelegator {
+/** The central point of a batch processing queue. From here, processing will be started.
+ * Initialization of the input is done via the reader chain, initialization of the output via the writer chain (which may
+ * be just a discard / /dev/null writer in the simplest case).
+ * 
+ * It is assumed that command line parsing (if any is required) is performed first, for example via the CmdlineParserContext class.
+ *
+ * @param <E>
+ */
+public class Batch<E> {
     private static final Logger LOG = LoggerFactory.getLogger(Batch.class);
     
     // some statistics data
-    protected Date programStart;
-    protected Date programEnd;
-    protected Date parsingStart;
-    protected Date parsingEnd;
+    private final BatchReader<? extends E> reader;
+    private final BatchWriter<? super E> writer;
     
-    protected Batch(Contributor priorStream) {
-        super(priorStream);
+    public Batch(BatchReader<? extends E> reader, BatchWriter<? super E> writer) {
+        this.reader = reader;
+        this.writer = writer;
     }
     
-    abstract public void run() throws Exception;
+    public final void run(String ... args) throws Exception {
+//        CmdlineParserContext.getContext().parse(args);        // convenient for simple programs, but causes issues if multiple batches within an execution
+        
+        Date programStart = new Date();
+        LOG.info("{}: Initializing processing pipeline", programStart);
+        
+        // first, enable the output queue.
+        writer.open();
+
+        // then, enable the input queue (this may already push initial messages through the queue).
+        reader.open();
+
+        Date parsingStart = new Date();
+        LOG.info("{}: Starting to parse", parsingStart);
+        
+        reader.produceTo((data, i) -> writer.store(data, i));      // this is the main processing loop
+        
+        Date parsingEnd = new Date();
+        LOG.info("{}: Parsing the input complete", parsingEnd);
+
+        // close the input queue to ensure no further messages are generated (this may still push some final messages through the queue).
+        reader.close();
+        
+        // close the output queue (flushing any buffers)
+        writer.close();
+        
+        Date programEnd = new Date();
+        LOG.info("{}: Processing complete", programEnd);
+        
+        LOG.info("Parsing took {} ms, total time was {} ms",
+                parsingEnd.getTime() - parsingStart.getTime(),
+                programEnd.getTime() - programStart.getTime());
+    }
     
-    public final void runAll(String ... args) throws Exception {
-        programStart = new Date();
-        // add the main command line parameters
-        SimpleJSAP commandLineOptions = null;
-        try {
-            commandLineOptions = new SimpleJSAP("Bonaparte batch processor", "Runs batched tasks with multithreading", new Parameter[] {});
-        } catch (JSAPException e) {
-            LOG.error("Cannot create command line parameters: {}", e);
-            System.exit(1);
-        }
-        // add input / output related options
-        addCommandlineParameters(commandLineOptions);
-        
-        JSAPResult params = commandLineOptions.parse(args);
-        if (commandLineOptions.messagePrinted()) {
-            System.err.println("(use option --help for usage)");
-            System.exit(1);
-        }
-        
-        evalCommandlineParameters(params);
-        
-        parsingStart = new Date();
-        LOG.info("{}, Bonaparte batch: Starting to parse", parsingStart);
-        
-        run();
-        
-        parsingEnd = new Date();
-        long timediffInMillis = parsingEnd.getTime() - parsingStart.getTime();
-        
-        close();
-        
-        programEnd = new Date();
-        timediffInMillis = programEnd.getTime() - programStart.getTime();
-        LOG.info("{}, Bonaparte batch: total time = {} ms", programEnd, timediffInMillis);
+    // shorthand for new Batch<E>(reader, writer).run(args)
+    public static <T> void run(BatchReader<? extends T> reader, BatchWriter<? super T> writer, String ... args) throws Exception {
+        new Batch<T>(reader, writer).run(args);
     }
 }

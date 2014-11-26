@@ -2,10 +2,9 @@ package de.jpaw8.batch.producers;
 
 import java.util.function.ObjIntConsumer;
 
-import de.jpaw8.batch.api.BatchReader;
-import de.jpaw8.batch.producers.base.BatchReaderTextFileAbstract;
+import de.jpaw8.batch.producers.impl.BatchReaderTextFileAbstract;
 
-public class BatchReaderTextFile extends BatchReaderTextFileAbstract implements BatchReader<String> {
+public class BatchReaderTextFile extends BatchReaderTextFileAbstract<String> {
 
     @Override
     public void produceTo(ObjIntConsumer<? super String> whereToPut) throws Exception {

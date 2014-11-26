@@ -8,8 +8,9 @@ import java.util.function.Predicate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import de.jpaw8.batch.api.Batch;
-import de.jpaw8.batch.producers.BatchRange;
+import de.jpaw8.batch.consumers.impl.BatchWriterConsumer;
+import de.jpaw8.batch.filters.BatchFilterDelay;
+import de.jpaw8.batch.producers.BatchReaderRange;
 
 
 public class SingleRequest {
@@ -54,50 +55,44 @@ public class SingleRequest {
     @Test
     public void testCounterSimple() throws Exception {
         Counter a = new Counter();
-        Batch sequence = new BatchRange(1L, 2000L).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 2000L).forEach(a).run();
         Assert.assertEquals(a.num, 2000);
     }
 
     @Test
     public void testCounterMap() throws Exception {
         Counter a = new Counter();
-        Batch sequence = new BatchRange(1L, 2000L).map(l -> l * l).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 2000L).map(l -> l * l).forEach(a).run();
         Assert.assertEquals(a.num, 2000);
     }
 
     @Test
     public void testCounterFilter() throws Exception {
         Counter a = new Counter();
-        Batch sequence = new BatchRange(1L, 2000L).filter(l -> (l & 1) == 0L).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 2000L).filter(l -> (l & 1) == 0L).forEach(a).run();
         Assert.assertEquals(a.num, 1000);
     }
 
     @Test
     public void testCounter() throws Exception {
         Counter a = new Counter();
-        Batch sequence = new BatchRange(1L, 2000L).filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 2000L).filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a).run();
         Assert.assertEquals(a.num, 1000);
     }
     
     @Test
     public void testAdder() throws Exception {
         Adder a = new Adder();
-        Batch sequence = new BatchRange(1L, 100L).filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a);
+        new BatchReaderRange(1L, 100L).filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a).run();
 //        Batch sequence = new BatchRange(1L, 100L).filter(l -> (l & 1) == 0L).map(l -> { System.out.println("Got " + l); return l * l; }).forEach(a);
-        sequence.runAll();
         Assert.assertEquals(a.sum, 171700);
     }
 
     @Test
     public void testAdderLMAX() throws Exception {
         Adder a = new Adder();
-        Batch sequence = new BatchRange(1L, 100L).newThread().filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a);
+        new BatchReaderRange(1L, 100L).newThread().filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a).run();
 //        Batch sequence = new BatchRange(1L, 100L).filter(l -> (l & 1) == 0L).map(l -> { System.out.println("Got " + l); return l * l; }).forEach(a);
-        sequence.runAll();
         Assert.assertEquals(a.sum, 171700);
     }
 
@@ -106,8 +101,7 @@ public class SingleRequest {
         Counter a = new Counter();
         Delay d = new Delay();
         Date start = new Date();
-        Batch sequence = new BatchRange(1L, 10L).filter(d).filter(d).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 10L).filter(d).filter(d).forEach(a).run();
         Date end = new Date();
         Assert.assertEquals(a.num, 10);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
@@ -118,22 +112,64 @@ public class SingleRequest {
         Counter a = new Counter();
         Delay d = new Delay();
         Date start = new Date();
-        Batch sequence = new BatchRange(1L, 10L).filter(d).newThread().filter(d).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 10L).filter(d).newThread().filter(d).forEach(a).run();
         Date end = new Date();
         Assert.assertEquals(a.num, 10);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
     
+//    @Test
+//    public void testCounterDelays4Parallel() throws Exception {
+//        ParallelCounter a = new ParallelCounter();
+//        Delay d = new Delay();
+//        Date start = new Date();
+//        new BatchReaderRange(1L, 12L).parallel(4).filter(d).forEach(a).run();
+//        Date end = new Date();
+//        Assert.assertEquals(a.num.get(), 12);
+//        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+//    }
     @Test
-    public void testCounterDelays4Parallel() throws Exception {
-        ParallelCounter a = new ParallelCounter();
-        Delay d = new Delay();
+    public void testCounterDelays3() throws Exception {
+        Counter a = new Counter();
+        BatchFilterDelay d = new BatchFilterDelay(500);
         Date start = new Date();
-        Batch sequence = new BatchRange(1L, 12L).parallel(4).filter(d).forEach(a);
-        sequence.runAll();
+        new BatchReaderRange(1L, 12L).intfilter(d).intfilter(d).intfilter(d).forEach(a).run();
         Date end = new Date();
-        Assert.assertEquals(a.num.get(), 12);
+        Assert.assertEquals(a.num, 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+    @Test
+    public void testCounterDelays3parallel() throws Exception {
+        Counter a = new Counter();
+        BatchFilterDelay d = new BatchFilterDelay(500);
+        Date start = new Date();
+        new BatchReaderRange(1L, 12L).intfilter(d).newThread().intfilter(d).newThread().intfilter(d).forEach(a).run();
+        Date end = new Date();
+        Assert.assertEquals(a.num, 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+    
+    // expect 18 seconds
+    @Test
+    public void testCounterDelays3InConsumer() throws Exception {
+        Counter a = new Counter();
+        BatchFilterDelay d = new BatchFilterDelay(500);
+        Date start = new Date();
+        new BatchReaderRange(1L, 12L).intfilter(d).intfilter(d).forEach(new BatchWriterConsumer<Object>(a).intfilteredFrom(d)).run();
+        Date end = new Date();
+        Assert.assertEquals(a.num, 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+    
+    // expect 7 seconds (18 / 3, plus 2 * 0.5 each for startup / shutdown
+    @Test
+    public void testCounterDelays3parallelInConsumer() throws Exception {
+        Counter a = new Counter();
+        BatchFilterDelay d = new BatchFilterDelay(500);
+        Date start = new Date();
+        new BatchReaderRange(1L, 12L).intfilter(d).newThread().intfilter(d).forEach(new BatchWriterConsumer<Object>(a).intfilteredFrom(d).newThread()).run();
+        Date end = new Date();
+        Assert.assertEquals(a.num, 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
 }

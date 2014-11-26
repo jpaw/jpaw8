@@ -9,17 +9,11 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-import com.martiansoftware.jsap.JSAPResult;
+import de.jpaw8.batch.producers.impl.BatchReaderFile;
 
-import de.jpaw8.batch.api.BatchReader;
-import de.jpaw8.batch.producers.base.BatchReaderFile;
-
-public class BatchReaderXmlFile<E> extends BatchReaderFile implements BatchReader<E> {
-
-//    private final JAXBContext context;
+public class BatchReaderXmlFile<E> extends BatchReaderFile<E> {
     private final Class<E> targetClass;
     private final Unmarshaller u;
-    private XMLStreamReader r;
     
     public BatchReaderXmlFile(JAXBContext context, Class<E> targetClass) throws JAXBException {
         this.targetClass = targetClass;
@@ -29,6 +23,14 @@ public class BatchReaderXmlFile<E> extends BatchReaderFile implements BatchReade
     @Override
     public void produceTo(ObjIntConsumer<? super E> whereToPut) throws Exception {
         int n = 0;
+        
+        // this method is used to set up the parser
+        XMLInputFactory f = XMLInputFactory.newInstance();
+        XMLStreamReader r = f.createXMLStreamReader(uncompressedStream);
+        r.nextTag();
+        r.require(XMLStreamConstants.START_ELEMENT, null, null);
+        r.nextTag();
+
         // use JAXB to unmarshal the element
         System.out.println("Reading XML Stream");
         while (r.getEventType() == XMLStreamConstants.START_ELEMENT) {
@@ -40,18 +42,5 @@ public class BatchReaderXmlFile<E> extends BatchReaderFile implements BatchReade
                 throw new Exception("Record is of type " + elem.getClass().getCanonicalName());
             }
         }
-    }
-    
-    @Override
-    public void evalCommandlineParameters(JSAPResult params) throws Exception {
-        super.evalCommandlineParameters(params);
-        
-        // this method is used to set up the parser
-        XMLInputFactory f = XMLInputFactory.newInstance();
-        r = f.createXMLStreamReader(uncompressedStream);
-        r.nextTag();
-        r.require(XMLStreamConstants.START_ELEMENT, null, null);
-        r.nextTag();
-
     }
 }
