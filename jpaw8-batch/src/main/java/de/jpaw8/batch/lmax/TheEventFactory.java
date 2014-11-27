@@ -1,4 +1,4 @@
-package de.jpaw8.batch.api;
+package de.jpaw8.batch.lmax;
 
 import com.lmax.disruptor.EventFactory;
 

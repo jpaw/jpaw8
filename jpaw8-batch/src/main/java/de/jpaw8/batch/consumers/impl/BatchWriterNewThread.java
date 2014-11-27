@@ -9,8 +9,8 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 
 import de.jpaw8.batch.api.BatchWriter;
-import de.jpaw8.batch.api.DataWithOrdinal;
-import de.jpaw8.batch.api.TheEventFactory;
+import de.jpaw8.batch.lmax.DataWithOrdinal;
+import de.jpaw8.batch.lmax.TheEventFactory;
 
 public class BatchWriterNewThread <E> extends BatchWriterLinked<E> {
     private final BatchWriter<? super E> consumer;

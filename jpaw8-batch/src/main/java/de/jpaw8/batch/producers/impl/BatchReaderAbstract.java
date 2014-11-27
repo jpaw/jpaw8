@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 import de.jpaw8.batch.api.Batch;
 import de.jpaw8.batch.api.BatchReader;
 import de.jpaw8.batch.api.BatchWriter;
+import de.jpaw8.batch.api.BatchWriterFactory;
+import de.jpaw8.batch.api.Batches;
 import de.jpaw8.batch.consumers.BatchWriterDevNull;
 import de.jpaw8.batch.consumers.impl.BatchWriterConsumer;
 import de.jpaw8.batch.consumers.impl.BatchWriterConsumerObjInt;
@@ -70,8 +72,8 @@ public abstract class BatchReaderAbstract<E> implements BatchReader<E> {
         return new Batch<E> (this, new BatchWriterDevNull<E>());
     }
     // add a discard and run it right away.
-    public void run(String ... args) throws Exception {
-        discard().run(args);       // just a synonym
+    public void run() throws Exception {
+        discard().run();       // just a synonym
     }
     
     
@@ -81,8 +83,13 @@ public abstract class BatchReaderAbstract<E> implements BatchReader<E> {
     public <F> BatchReaderAbstract<E> newThread() {
         return new BatchReaderNewThread<E>(this, 1024);
     }
-    public <F> BatchReaderAbstract<E> parallel(int numThreads) {
-        return new BatchReaderNewThread<E>(this, 1024, numThreads);
+    
+    // execute parallel sinks (corresponds to forEach)
+    public Batches<E> parallel(BatchWriterFactory<? super E> writers) {
+        return new Batches<E>(new BatchReaderNewThreads<E>(this), writers);
+    }
+    public Batches<E> parallel(int numThreads, int bufferSize, BatchWriterFactory<? super E> writers) {
+        return new Batches<E>(new BatchReaderNewThreads<E>(this, bufferSize, numThreads), writers);
     }
 }
 

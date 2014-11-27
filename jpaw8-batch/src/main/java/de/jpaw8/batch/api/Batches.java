@@ -5,7 +5,7 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** The central point of a batch processing queue. From here, processing will be started.
+/** The central point of a multithreaded batch processing queue. From here, processing will be started.
  * Initialization of the input is done via the reader chain, initialization of the output via the writer chain (which may
  * be just a discard / /dev/null writer in the simplest case).
  * 
@@ -13,14 +13,14 @@ import org.slf4j.LoggerFactory;
  *
  * @param <E>
  */
-public final class Batch<E> {
+public final class Batches<E> {
     private static final Logger LOG = LoggerFactory.getLogger(Batch.class);
     
     // some statistics data
-    private final BatchReader<? extends E> reader;
-    private final BatchWriter<? super E> writer;
+    private final BatchReaderFactory<? extends E> reader;
+    private final BatchWriterFactory<? super E> writer;
     
-    public Batch(BatchReader<? extends E> reader, BatchWriter<? super E> writer) {
+    public Batches(BatchReaderFactory<? extends E> reader, BatchWriterFactory<? super E> writer) {
         this.reader = reader;
         this.writer = writer;
     }
@@ -40,7 +40,8 @@ public final class Batch<E> {
         Date parsingStart = new Date();
         LOG.info("{}: Starting to parse", parsingStart);
         
-        reader.produceTo((data, i) -> writer.store(data, i));      // this is the main processing loop
+        // kick off the threads. This is done by the starting the readers main loop
+        reader.produceTo(writer);      // this is the main processing loop
         
         Date parsingEnd = new Date();
         LOG.info("{}: Parsing the input complete", parsingEnd);
@@ -60,7 +61,7 @@ public final class Batch<E> {
     }
     
     // shorthand for new Batch<E>(reader, writer).run(args)
-    public static <T> void run(BatchReader<? extends T> reader, BatchWriter<? super T> writer) throws Exception {
-        new Batch<T>(reader, writer).run();
+    public static <T> void run(BatchReaderFactory<? extends T> reader, BatchWriterFactory<? super T> writer) throws Exception {
+        new Batches<T>(reader, writer).run();
     }
 }
