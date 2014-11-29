@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory;
 import com.martiansoftware.jsap.JSAP;
 
 import de.jpaw.cmdline.CmdlineParserContext;
+import de.jpaw8.batch.api.BatchReader;
 
-abstract public class BatchReaderFile<Q> extends BatchReaderAbstract<Q> {
+abstract public class BatchReaderFile<Q> implements BatchReader<Q> {
     private static final Logger LOG = LoggerFactory.getLogger(BatchReaderFile.class);
     private static final int BUFFER_SIZE = 65536;       // GZIP Buffer size (tunable constant for performance)
     private boolean useGzip = false;

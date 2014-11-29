@@ -5,7 +5,6 @@ import de.jpaw8.batch.api.BatchIO;
 /** A stream (reader) which receives input from a nested reader.
  * Purpose of this class is to invoke the open() and close() respectively.
  *
- * @param <E>
  */
 public abstract class BatchLinked implements BatchIO {
     private final BatchIO myProducer;

@@ -59,6 +59,13 @@ public final class Batches<E> {
                 parsingEnd.getTime() - parsingStart.getTime(),
                 programEnd.getTime() - programStart.getTime());
     }
+    public final void runNoLog() throws Exception {
+      writer.open();
+      reader.open();
+      reader.produceTo(writer);      // this is the main processing loop
+      reader.close();
+      writer.close();
+  }
     
     // shorthand for new Batch<E>(reader, writer).run(args)
     public static <T> void run(BatchReaderFactory<? extends T> reader, BatchWriterFactory<? super T> writer) throws Exception {

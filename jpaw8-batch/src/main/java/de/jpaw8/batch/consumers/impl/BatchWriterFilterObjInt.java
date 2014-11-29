@@ -1,9 +1,10 @@
 package de.jpaw8.batch.consumers.impl;
 
 import de.jpaw8.batch.api.BatchWriter;
+import de.jpaw8.batch.factories.BatchLinked;
 import de.jpaw8.function.ObjIntPredicate;
 
-public class BatchWriterFilterObjInt<E> extends BatchWriterLinked<E> {
+public class BatchWriterFilterObjInt<E> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super E> consumer;
     private final ObjIntPredicate<? super E> filter;
     

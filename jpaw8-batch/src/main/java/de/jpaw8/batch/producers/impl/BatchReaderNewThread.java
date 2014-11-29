@@ -10,11 +10,12 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 
 import de.jpaw8.batch.api.BatchReader;
+import de.jpaw8.batch.factories.BatchLinked;
 import de.jpaw8.batch.lmax.DataWithOrdinal;
 import de.jpaw8.batch.lmax.TheConsumer;
 import de.jpaw8.batch.lmax.TheEventFactory;
 
-public class BatchReaderNewThread<E> extends BatchReaderLinked<E> {
+public class BatchReaderNewThread<E> extends BatchLinked implements BatchReader<E> {
     private final BatchReader<? extends E> producer;
     private final int bufferSize;
     
@@ -32,7 +33,15 @@ public class BatchReaderNewThread<E> extends BatchReaderLinked<E> {
         ExecutorService threads = Executors.newSingleThreadExecutor();
         
         // Construct the Disruptor which interfaces the decoder to DB storage
-        final Disruptor<DataWithOrdinal<E>> disruptor = new Disruptor<DataWithOrdinal<E>>(factory, bufferSize, threads);
+//        final Disruptor<DataWithOrdinal<E>> disruptor = new Disruptor<DataWithOrdinal<E>>(factory, bufferSize, threads);
+        final Disruptor<DataWithOrdinal<E>> disruptor = new Disruptor<DataWithOrdinal<E>>(
+                factory,
+                bufferSize,
+                threads
+                // adding the next 2 lines should be faster by the Wiki, but seems to break it (exhaust all of the machine's resources)
+//                , ProducerType.SINGLE, // Single producer
+//                new BlockingWaitStrategy()
+        );
         
         // Connect the handler - ST
         EventHandler<DataWithOrdinal<E>> handler = (data, sequence, isLast) -> whereToPut.accept(data.data, data.recordno);

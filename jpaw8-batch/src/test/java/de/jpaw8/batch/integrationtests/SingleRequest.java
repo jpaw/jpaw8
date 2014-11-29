@@ -3,14 +3,22 @@ package de.jpaw8.batch.integrationtests;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import de.jpaw8.batch.api.BatchProcessorFactory;
+import de.jpaw8.batch.api.BatchWriter;
+import de.jpaw8.batch.api.Batches;
+import de.jpaw8.batch.consumers.impl.BatchProcessorFactoryByIdentity;
 import de.jpaw8.batch.consumers.impl.BatchWriterConsumer;
+import de.jpaw8.batch.consumers.impl.BatchWriterFactoryByIdentity;
+import de.jpaw8.batch.factories.Collector;
 import de.jpaw8.batch.filters.BatchFilterDelay;
 import de.jpaw8.batch.producers.BatchReaderRange;
+import de.jpaw8.batch.producers.impl.BatchReaderNewThreadsViaQueue;
 
 
 public class SingleRequest {
@@ -49,6 +57,18 @@ public class SingleRequest {
                 throw new RuntimeException("Interrupted: " + e);
             }
             return true;
+        }
+    }
+    static private class DelayFunction<T> implements Function<T,T> {
+        
+        @Override
+        public T apply(T t) {
+            try {
+                Thread.sleep(500L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Interrupted: " + e);
+            }
+            return t;
         }
     }
     
@@ -138,6 +158,7 @@ public class SingleRequest {
         Assert.assertEquals(a.num, 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
+    // expect 7 seconds: 12 * 0.5 per stage = 6 seconds, + 2 * 0.5 for pipeline fill / drain
     @Test
     public void testCounterDelays3parallel() throws Exception {
         Counter a = new Counter();
@@ -172,4 +193,63 @@ public class SingleRequest {
         Assert.assertEquals(a.num, 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
+    
+    // expect 1.5 seconds: 12 / 4 * 0.5
+    @Test
+    public void testCounterParallel() throws Exception {
+        ParallelCounter ctr = new ParallelCounter();
+        BatchFilterDelay d = new BatchFilterDelay(500);
+        BatchWriter<Object> consumer = new BatchWriterConsumer<Object>(ctr);
+        BatchWriter<Object> consumer2 = consumer.intfilteredFrom(d);
+        Date start = new Date();
+        new BatchReaderRange(1L, 12L).parallel(4, 16, new BatchWriterFactoryByIdentity<Object>(consumer2)).run();
+        Date end = new Date();
+        Assert.assertEquals(ctr.num.get(), 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+    // the same, but with ArrayBlockingQueue (expect 1.5 seconds: 12 / 4 * 0.5
+    @Test
+    public void testCounterParallelViaQueue() throws Exception {
+        ParallelCounter ctr = new ParallelCounter();
+        BatchFilterDelay d = new BatchFilterDelay(500);
+        BatchWriter<Object> consumer = new BatchWriterConsumer<Object>(ctr);
+        BatchWriter<Object> consumer2 = consumer.intfilteredFrom(d);
+        Date start = new Date();
+        new Batches<Long>(new BatchReaderNewThreadsViaQueue<Long>(new BatchReaderRange(1L, 12L), 16, 4), new BatchWriterFactoryByIdentity<Object>(consumer2)).run();
+        Date end = new Date();
+        Assert.assertEquals(ctr.num.get(), 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+    
+    // split to different threads and collecting the results again!
+    @Test
+    public void testCounterParallelAndMerge() throws Exception {
+        ParallelCounter ctr = new ParallelCounter();
+        BatchWriter<Object> consumer = new BatchWriterConsumer<Object>(ctr);
+        Date start = new Date();
+//        new Batches<Long>(new BatchReaderNewThreadsViaQueue<Long>(new BatchReaderRange(1L, 12L), 16, 4),
+//                new Collector<Long>(consumer)).run();
+        new BatchReaderRange(1L, 12L).parallel(4, 16, new Collector<Long>(consumer)).run();
+
+        Date end = new Date();
+        Assert.assertEquals(ctr.num.get(), 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+
+    // split to different threads and collecting the results again! With Delay! Expect 1.5 seconds
+    @Test
+    public void testCounterParallelAndMergeWithDelay() throws Exception {
+        ParallelCounter ctr = new ParallelCounter();
+        
+        BatchProcessorFactory<Long, Long> justADelay = new BatchProcessorFactoryByIdentity<>(new DelayFunction<Long>());
+        BatchWriter<Object> consumer = new BatchWriterConsumer<Object>(ctr);
+        Date start = new Date();
+        new BatchReaderRange(1L, 12L).parallel(4, 16, new Collector<Long>(consumer).mappedFrom(justADelay)).run();
+
+        Date end = new Date();
+        Assert.assertEquals(ctr.num.get(), 12);
+        System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
+    }
+
+
 }

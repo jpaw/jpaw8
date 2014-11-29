@@ -2,7 +2,9 @@ package de.jpaw8.batch.producers.impl;
 
 import java.util.function.ObjIntConsumer;
 
-public class BatchReaderIterable<E> extends BatchReaderAbstract<E> {
+import de.jpaw8.batch.api.BatchReader;
+
+public class BatchReaderIterable<E> implements BatchReader<E> {
     private final Iterable<E> iter;
 
     public BatchReaderIterable(Iterable<E> iter) {

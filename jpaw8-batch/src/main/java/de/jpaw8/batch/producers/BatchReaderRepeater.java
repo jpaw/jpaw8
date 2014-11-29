@@ -5,11 +5,11 @@ import java.util.function.ObjIntConsumer;
 import com.martiansoftware.jsap.JSAP;
 
 import de.jpaw.cmdline.CmdlineParserContext;
-import de.jpaw8.batch.producers.impl.BatchReaderAbstract;
+import de.jpaw8.batch.api.BatchReader;
 
 /** Batch reader for testing. This one repeats the provided input a specified number of times,
  *  and optionally waits between data production. */
-public class BatchReaderRepeater<E> extends BatchReaderAbstract<E> {
+public class BatchReaderRepeater<E> implements BatchReader<E> {
     static private final String OPTION = "num";
     private final E objectToRepeat;
     private int numRepeats = 1;

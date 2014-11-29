@@ -9,10 +9,11 @@ import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 
 import de.jpaw8.batch.api.BatchWriter;
+import de.jpaw8.batch.factories.BatchLinked;
 import de.jpaw8.batch.lmax.DataWithOrdinal;
 import de.jpaw8.batch.lmax.TheEventFactory;
 
-public class BatchWriterNewThread <E> extends BatchWriterLinked<E> {
+public class BatchWriterNewThread <E> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super E> consumer;
     private final int bufferSize;
     private final int numThreads;

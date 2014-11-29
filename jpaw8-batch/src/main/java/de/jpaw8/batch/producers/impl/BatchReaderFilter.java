@@ -4,8 +4,9 @@ import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 
 import de.jpaw8.batch.api.BatchReader;
+import de.jpaw8.batch.factories.BatchLinked;
 
-public class BatchReaderFilter<E> extends BatchReaderLinked<E> {
+public class BatchReaderFilter<E> extends BatchLinked implements BatchReader<E> {
     private final BatchReader<? extends E> producer;
     private final Predicate<? super E> filter;
 

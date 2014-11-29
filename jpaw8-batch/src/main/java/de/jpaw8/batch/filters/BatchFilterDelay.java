@@ -4,11 +4,11 @@ import java.util.function.IntPredicate;
 
 import com.martiansoftware.jsap.JSAP;
 
-import de.jpaw.cmdline.Callback;
+import de.jpaw.cmdline.CmdlineCallback;
 import de.jpaw.cmdline.CmdlineParserContext;
 
 /** Misuse of the filter to implement a delay. */
-public class BatchFilterDelay implements IntPredicate, Callback {
+public class BatchFilterDelay implements IntPredicate, CmdlineCallback {
     static private final String OPTION = "delay";
     final String prefix;
     int delay = 0;

@@ -13,9 +13,10 @@ import org.slf4j.LoggerFactory;
 import com.martiansoftware.jsap.JSAP;
 
 import de.jpaw.cmdline.CmdlineParserContext;
+import de.jpaw8.batch.api.BatchWriter;
 
 // generic parameter only used in superclasses
-abstract public class BatchWriterFile<Q> extends BatchWriterAbstract<Q> {
+abstract public class BatchWriterFile<Q> implements BatchWriter<Q> {
     private static final Logger LOG = LoggerFactory.getLogger(BatchWriterFile.class);
     private boolean useGzip = false;
     private boolean useZip = false;

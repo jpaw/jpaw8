@@ -4,11 +4,11 @@ import java.util.function.IntPredicate;
 
 import com.martiansoftware.jsap.JSAP;
 
-import de.jpaw.cmdline.Callback;
+import de.jpaw.cmdline.CmdlineCallback;
 import de.jpaw.cmdline.CmdlineParserContext;
 
 /** Misuse of the filter to implement skipping records or limiting records. */
-public class BatchFilterRange implements IntPredicate, Callback {
+public class BatchFilterRange implements IntPredicate, CmdlineCallback {
     static private final String OPTION_MIN = "min";
     static private final String OPTION_MAX = "max";
     protected int recordNoMin = 1;

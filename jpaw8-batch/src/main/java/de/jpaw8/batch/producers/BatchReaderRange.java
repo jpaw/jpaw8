@@ -2,9 +2,9 @@ package de.jpaw8.batch.producers;
 
 import java.util.function.ObjIntConsumer;
 
-import de.jpaw8.batch.producers.impl.BatchReaderAbstract;
+import de.jpaw8.batch.api.BatchReader;
 
-public class BatchReaderRange extends BatchReaderAbstract<Long> {
+public class BatchReaderRange implements BatchReader<Long> {
     final long from, to;
     
     public BatchReaderRange(long from, long to) {

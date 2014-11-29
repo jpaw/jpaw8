@@ -4,8 +4,9 @@ import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 
 import de.jpaw8.batch.api.BatchReader;
+import de.jpaw8.batch.factories.BatchLinked;
 
-public class BatchReaderMap<E,R> extends BatchReaderLinked<R> {
+public class BatchReaderMap<E,R> extends BatchLinked implements BatchReader<R> {
     private final BatchReader<? extends E> producer;
     private final Function<E,R> function;
 

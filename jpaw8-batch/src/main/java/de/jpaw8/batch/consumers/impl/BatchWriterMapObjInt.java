@@ -1,9 +1,10 @@
 package de.jpaw8.batch.consumers.impl;
 
 import de.jpaw8.batch.api.BatchWriter;
+import de.jpaw8.batch.factories.BatchLinked;
 import de.jpaw8.function.ObjIntFunction;
 
-public class BatchWriterMapObjInt<E,R> extends BatchWriterLinked<E> {
+public class BatchWriterMapObjInt<E,R> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super R> consumer;
     private final ObjIntFunction<E,R> function;
     

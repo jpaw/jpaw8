@@ -3,9 +3,10 @@ package de.jpaw8.batch.producers.impl;
 import java.util.function.ObjIntConsumer;
 
 import de.jpaw8.batch.api.BatchReader;
+import de.jpaw8.batch.factories.BatchLinked;
 import de.jpaw8.function.ObjIntPredicate;
 
-public class BatchReaderFilterObjInt<E> extends BatchReaderLinked<E> {
+public class BatchReaderFilterObjInt<E> extends BatchLinked implements BatchReader<E> {
     private final BatchReader<? extends E> producer;
     private final ObjIntPredicate<? super E> biFilter;
 

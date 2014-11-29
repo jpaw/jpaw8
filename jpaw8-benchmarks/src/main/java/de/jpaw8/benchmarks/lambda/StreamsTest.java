@@ -39,24 +39,24 @@ public class StreamsTest {
 //    
     
     @Benchmark
-    public void javaStreamMap(Blackhole bh) {
+    public void javaStreamSequentialMap(Blackhole bh) {
         LongStream.rangeClosed(1, NUM)         .map(l -> l* l).forEach(l -> bh.consume(l));
     }
     @Benchmark
-    public void javaStreamSetup(Blackhole bh) {
+    public void javaStreamSequentialSetup(Blackhole bh) {
         LongStream.rangeClosed(1,  10)         .map(l -> l* l).forEach(l -> bh.consume(l));
     }
 
     @Benchmark
-    public void jpawStreamMap(Blackhole bh) throws Exception {
-        Batch sequence = new BatchReaderRange(1, NUM).map(l -> l * l).forEach(l -> bh.consume(l));
-        sequence.run();
+    public void jpawBatchSequentialMap(Blackhole bh) throws Exception {
+        Batch<Long> sequence = new BatchReaderRange(1, NUM).map(l -> l * l).forEach(l -> bh.consume(l));
+        sequence.runNoLog();
     }
 
     @Benchmark
-    public void jpawStreamSetup(Blackhole bh) throws Exception {
-        Batch sequence = new BatchReaderRange(1,  10).map(l -> l * l).forEach(l -> bh.consume(l));
-        sequence.run();
+    public void jpawBatchSequentialSetup(Blackhole bh) throws Exception {
+        Batch<Long> sequence = new BatchReaderRange(1,  10).map(l -> l * l).forEach(l -> bh.consume(l));
+        sequence.runNoLog();
     }
 
 }

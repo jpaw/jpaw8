@@ -11,6 +11,9 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 
 import de.jpaw8.batch.api.Batch;
+import de.jpaw8.batch.api.BatchWriter;
+import de.jpaw8.batch.api.BatchWriterFactory;
+import de.jpaw8.batch.api.Batches;
 import de.jpaw8.batch.producers.BatchReaderRange;
 
 // Benchmarks to investigate how much performance the new lambda take
@@ -33,32 +36,57 @@ import de.jpaw8.batch.producers.BatchReaderRange;
 public class LmaxTest {
     public static final long NUM = 10000;
     
+    private static class ConsumerFactory implements BatchWriterFactory<Object> {
+        private final Blackhole bh;
+        
+        private ConsumerFactory(Blackhole bh) {
+            this.bh = bh;
+        }
+
+        @Override
+        public BatchWriter<Object> get(int threadno) {
+            return (Object l, int i) -> { bh.consume(l); };
+        }
+    }
 
 //    
 //  Benchmarks to measure the overhead of the disruptor
 //    
     
     @Benchmark
-    public void lmaxMap(Blackhole bh) throws Exception {
-        Batch sequence = new BatchReaderRange(1, NUM).newThread().forEach(l -> bh.consume(l));
-        sequence.run();
+    public void jpawBatchLmaxMap(Blackhole bh) throws Exception {
+        Batch<Long> sequence = new BatchReaderRange(1, NUM).newThread().forEach(l -> bh.consume(l));
+        sequence.runNoLog();
     }
     @Benchmark
-    public void lmaxSetup(Blackhole bh) throws Exception {
-        Batch sequence = new BatchReaderRange(1,  10).newThread().forEach(l -> bh.consume(l));
-        sequence.run();
+    public void jpawBatchLmaxSetup(Blackhole bh) throws Exception {
+        Batch<Long> sequence = new BatchReaderRange(1,  10).newThread().forEach(l -> bh.consume(l));
+        sequence.runNoLog();
     }
 
     @Benchmark
-    public void jpawStreamMap(Blackhole bh) throws Exception {
-        Batch sequence = new BatchReaderRange(1, NUM).forEach(l -> bh.consume(l));
-        sequence.run();
+    public void jpawBatchSequentialMap(Blackhole bh) throws Exception {
+        Batch<Long> sequence = new BatchReaderRange(1, NUM).forEach(l -> bh.consume(l));
+        sequence.runNoLog();
     }
 
     @Benchmark
-    public void jpawStreamSetup(Blackhole bh) throws Exception {
-        Batch sequence = new BatchReaderRange(1,  10).forEach(l -> bh.consume(l));
-        sequence.run();
+    public void jpawBatchSequentialSetup(Blackhole bh) throws Exception {
+        Batch<Long> sequence = new BatchReaderRange(1,  10).forEach(l -> bh.consume(l));
+        sequence.runNoLog();
     }
+    
+    @Benchmark
+    public void jpawBatchParallelMap(Blackhole bh) throws Exception {
+        Batches<Long> sequence = new BatchReaderRange(1, NUM).parallel(4, 128, new ConsumerFactory(bh));
+        sequence.runNoLog();
+    }
+
+    @Benchmark
+    public void jpawBatchParallelSetup(Blackhole bh) throws Exception {
+        Batches<Long> sequence = new BatchReaderRange(1, 10).parallel(4, 128, new ConsumerFactory(bh));
+        sequence.runNoLog();
+    }
+
 
 }
