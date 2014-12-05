@@ -13,6 +13,10 @@
 
     <description>Common configuration settings for all jpaw basic / utility projects</description>
 
+    <properties>
+        <jpaw.version>1.0.3-SNAPSHOT</jpaw.version>
+    </properties>
+
     <build>
         <pluginManagement>
             <plugins>
