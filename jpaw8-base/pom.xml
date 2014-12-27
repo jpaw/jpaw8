@@ -3,20 +3,29 @@
 
     <parent>
         <groupId>de.jpaw</groupId>
-        <artifactId>jpaw-base</artifactId>
-        <version>1.0.3</version>
+        <artifactId>jpaw-se-parent</artifactId>
+        <version>1.0.1</version>
         <relativePath/>
     </parent>
 
     <artifactId>jpaw8-base</artifactId>
+    <version>1.1.0</version>
     <packaging>pom</packaging>
 
     <description>Common configuration settings for all jpaw basic / utility projects</description>
 
-    <properties>
-        <jpaw.version>1.0.3</jpaw.version>
-    </properties>
-
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.jpaw</groupId>
+                <artifactId>jpaw-bom</artifactId>
+                <version>1.2.0</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
     <build>
         <pluginManagement>
             <plugins>
@@ -49,7 +58,17 @@
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+    
     <modules>
+        <module>../jpaw8-bom/pom.xml</module>
         <module>../jpaw8-core/pom.xml</module>
         <module>../jpaw8-batch/pom.xml</module>
         <module>../jpaw8-benchmarks/pom.xml</module>

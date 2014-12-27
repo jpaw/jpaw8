@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.jpaw</groupId>
+        <artifactId>jpaw8-base</artifactId>
+        <version>1.1.0</version>
+        <relativePath>../jpaw8-base/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>jpaw8-bom</artifactId>
+    <packaging>pom</packaging>
+
+    <description>JPAW Java 8 part bill of materials</description>
+    
+    <!-- Define my own version as a convenience for users. Possibly not required. -->
+<!--     
+    <properties>
+        <jpaw8.version>1.1.0</jpaw8.version>
+    </properties>
+ -->
+ 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>de.jpaw</groupId>
+                <artifactId>jpaw8-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.jpaw</groupId>
+                <artifactId>jpaw8-batch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.jpaw</groupId>
+                <artifactId>jpaw8-benchmarks</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>
