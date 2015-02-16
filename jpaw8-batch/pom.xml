@@ -63,6 +63,11 @@
             <artifactId>disruptor</artifactId>
             <version>${disruptor.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hdrhistogram</groupId>
+            <artifactId>HdrHistogram</artifactId>
+            <version>${hdrHistorgram.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>

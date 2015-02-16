@@ -4,7 +4,7 @@
     <parent>
         <groupId>de.jpaw</groupId>
         <artifactId>jpaw-se-parent</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
+        <version>1.0.3-SNAPSHOT</version>
         <relativePath/>
     </parent>
 
@@ -14,12 +14,16 @@
 
     <description>Common configuration settings for all jpaw basic / utility projects</description>
 
+    <properties>
+        <hdrHistorgram.version>2.1.4</hdrHistorgram.version>
+    </properties>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>de.jpaw</groupId>
                 <artifactId>jpaw-bom</artifactId>
-                <version>1.2.3-SNAPSHOT</version>
+                <version>1.2.5-SNAPSHOT</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
