@@ -21,7 +21,11 @@ import org.openjdk.jmh.infra.Blackhole;
 //d.j.b.b.t.BenchThreadLocal.javaThreadLocal    avgt        9  924.757        2.544  ns/op
 //d.j.b.b.t.BenchThreadLocal.javaWrapper        avgt        9  385.112       28.798  ns/op
 
-
+// => per access timings, sorted:
+// primitive   = 1.7 ns (baseline)
+// wrapped     = 3.8 ns (object overhead)
+// atomic      = 5.3 ns (memory)
+// threadLocal = 9.2 ns (= magnitude of JNI call)
 
 @State(value = Scope.Thread)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
