@@ -8,7 +8,7 @@ import de.jpaw8.batch.processors.BatchProcessorFactoryTcp;
 @FunctionalInterface
 public interface BatchProcessorFactory<E,F> extends BatchIO {
     BatchProcessor<E,F> getProcessor(int threadNo) throws Exception;
-    
+
     public static final String SYSTEM_PROPERTY_CONNECTION = System.getProperty("jpaw.remote.connection", "rest");
 
     public static <X> BatchProcessorFactory<X, X> getRemoteBatchProcessorFactoryBySystemProperty(BatchMarshallerFactory<X> marshallerFactory) {
@@ -23,7 +23,7 @@ public interface BatchProcessorFactory<E,F> extends BatchIO {
             return null;  // should not happen!
         }
     }
-    
+
     public static <X> BatchProcessorFactory<X, X> getRemoteBatchProcessorFactoryBySystemProperty(BatchMarshaller<X> immutableMarshaller) {
         switch (SYSTEM_PROPERTY_CONNECTION) {
         case "rest":
@@ -36,5 +36,5 @@ public interface BatchProcessorFactory<E,F> extends BatchIO {
             return null;  // should not happen!
         }
     }
-    
+
 }

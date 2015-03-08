@@ -22,16 +22,16 @@ abstract public class BatchReaderFile<Q> implements BatchReader<Q> {
     private String filename = null;
     private InputStream rawStream = null;
     protected InputStream uncompressedStream = null;    // the effective input. Subclasses can add buffering and decoding
-    protected boolean isBuffered = false;               // information if this stream is buffered already, to avoid duplicate buffers 
+    protected boolean isBuffered = false;               // information if this stream is buffered already, to avoid duplicate buffers
     private final CmdlineParserContext ctx;
-    
+
     public BatchReaderFile() {
         ctx = CmdlineParserContext.getContext();
         ctx.addFlaggedOption("in", JSAP.STRING_PARSER, null, JSAP.NOT_REQUIRED, 'i', "input filename (extensions .gz and .zip are understood)");
         ctx.addSwitch("inzip", JSAP.NO_SHORTFLAG, "unzip input file on the fly");
         ctx.addSwitch("ingzip", JSAP.NO_SHORTFLAG, "gunzip input file on the fly");
     }
-    
+
     @Override
     public void open() throws Exception {
         useGzip = ctx.getBoolean("ingzip");
@@ -49,7 +49,7 @@ abstract public class BatchReaderFile<Q> implements BatchReader<Q> {
             // fatal error, terminate
             System.exit(1);
         }
-        
+
         // command line parsed, now open the input (and check for existence of file)
         // if the file does not exist, we terminate without doing anything
         if (filename == null) {
@@ -75,7 +75,7 @@ abstract public class BatchReaderFile<Q> implements BatchReader<Q> {
             uncompressedStream = rawStream;
         }
     }
-    
+
     @Override
     public void close() throws Exception {
         uncompressedStream.close();

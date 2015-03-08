@@ -7,7 +7,7 @@ import de.jpaw8.function.ObjIntPredicate;
 public class BatchWriterFilterObjInt<E> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super E> consumer;
     private final ObjIntPredicate<? super E> filter;
-    
+
     public BatchWriterFilterObjInt(BatchWriter<? super E> consumer, ObjIntPredicate<? super E> filter) {
         super(consumer);
         this.consumer = consumer;

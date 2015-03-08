@@ -14,13 +14,13 @@ public class BatchReaderRepeater<E> implements BatchReader<E> {
     private final E objectToRepeat;
     private int numRepeats = 1;
     private final CmdlineParserContext ctx;
-    
+
     public BatchReaderRepeater(E objectToRepeat, int num) {
         this.objectToRepeat = objectToRepeat;
         this.numRepeats = num;
         ctx = null;
     }
-    
+
     public BatchReaderRepeater(E objectToRepeat) {
         this.objectToRepeat = objectToRepeat;
         ctx = CmdlineParserContext.getContext();

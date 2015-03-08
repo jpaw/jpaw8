@@ -6,13 +6,13 @@ import java.io.OutputStream;
 public interface BatchMarshaller<X> {
     String getContentType();
     default byte getDelimiter() { return (byte)'\n'; }              // returns the character which ends a message
-    
+
     byte [] marshal(X request) throws Exception;                    // may be slow due to coyping
-    
+
     // preferred method (overwriting offers a chance to avoid buffer copies)
     default void marshal(X request, OutputStream w) throws Exception {
         w.write(marshal(request));
     }
-    
+
     X unmarshal(byte [] response, int length) throws Exception;     // may be slow due to coyping
 }

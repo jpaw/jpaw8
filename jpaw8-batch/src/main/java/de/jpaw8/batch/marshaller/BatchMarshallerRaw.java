@@ -22,7 +22,7 @@ public class BatchMarshallerRaw implements BatchMarshaller<byte []> {
     public void marshal(byte[] request, OutputStream w) throws Exception {
         w.write(request);
     }
-    
+
     @Override
     public byte [] unmarshal(byte[] response, int length) throws Exception {
         if (response == null || response.length == length)

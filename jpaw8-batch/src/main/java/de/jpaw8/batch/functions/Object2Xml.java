@@ -31,7 +31,7 @@ public class Object2Xml<T> implements Function <T,String>, CmdlineCallback {
             .addFlaggedOption("xmlEncoding", JSAP.STRING_PARSER, null, JSAP.NOT_REQUIRED, JSAP.NO_SHORTFLAG, "XML encoding (default is UTF-8, LIST to get a list of available character sets)")
             .registerCallback(this);
     }
-    
+
     /** Programmatic configuration. */
     public Object2Xml(JAXBContext context, boolean threadSafe, Charset encoding, boolean formatted) {
         this.context = context;
@@ -42,7 +42,7 @@ public class Object2Xml<T> implements Function <T,String>, CmdlineCallback {
             m = createMarshaller();
         }
     }
-    
+
     private Marshaller createMarshaller() {
         Marshaller mm;
         try {
@@ -56,7 +56,7 @@ public class Object2Xml<T> implements Function <T,String>, CmdlineCallback {
         }
         return mm;
     }
-    
+
     @Override
     public void readParameters(CmdlineParserContext ctx) {
         encoding = BatchCharsetUtil.charsetFromStringWithHelp(ctx.getString("xmlEncoding")).toString();

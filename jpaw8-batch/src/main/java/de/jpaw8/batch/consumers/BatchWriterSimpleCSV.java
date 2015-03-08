@@ -10,7 +10,7 @@ public class BatchWriterSimpleCSV extends BatchWriterTextFileAbstract<Boolean> {
         else
             return "ERROR";
     }
-    
+
     @Override
     public void store(Boolean response, int no) {
         super.write(no + "," + getResult(response) + "\n");

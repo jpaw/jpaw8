@@ -36,9 +36,9 @@ import org.openjdk.jmh.infra.Blackhole;
 @BenchmarkMode(Mode.AverageTime)
 public class LambdaTest {
     public static final int NUM = 100;
-    
+
     private List<String> stringList;
-    
+
     @Setup
     public void setUp() throws IOException {
         stringList = new ArrayList<String>(100);
@@ -47,10 +47,10 @@ public class LambdaTest {
         }
     }
 
-//    
-//  Benchmarks to measure the overhead to run a loop, in standard and in lambda mode 
-//    
-    
+//
+//  Benchmarks to measure the overhead to run a loop, in standard and in lambda mode
+//
+
     @Benchmark
     public void javaClassicPrimitive(Blackhole bh) {
         for (int i = 0; i < NUM; ++i) {

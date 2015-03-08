@@ -15,7 +15,7 @@ public class BatchReaderFilterInt<E> extends BatchLinked implements BatchReader<
         this.producer = producer;
         this.ordinalFilter = ordinalFilter;
     }
-    
+
     @Override
     public void produceTo(final ObjIntConsumer<? super E> whereToPut) throws Exception {
         producer.produceTo((data, i) -> { if (ordinalFilter.test(i)) whereToPut.accept(data, i); });

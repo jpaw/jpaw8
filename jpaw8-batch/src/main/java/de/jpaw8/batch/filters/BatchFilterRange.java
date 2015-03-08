@@ -13,7 +13,7 @@ public class BatchFilterRange implements IntPredicate, CmdlineCallback {
     static private final String OPTION_MAX = "max";
     protected int recordNoMin = 1;
     protected int recordNoMax = Integer.MAX_VALUE;
-    
+
     /** hardcoded range. */
     public BatchFilterRange(int recordNoMin, int recordNoMax) {
         this.recordNoMin = recordNoMin;
@@ -27,13 +27,13 @@ public class BatchFilterRange implements IntPredicate, CmdlineCallback {
             .addFlaggedOption(OPTION_MAX, JSAP.INTEGER_PARSER, "2000000000", JSAP.NOT_REQUIRED, JSAP.NO_SHORTFLAG, "biggest record number to pass")
             .registerCallback(this);
     }
-    
+
     @Override
     public void readParameters(CmdlineParserContext ctx) {
-        recordNoMin = ctx.getInt(OPTION_MIN); 
-        recordNoMax = ctx.getInt(OPTION_MAX); 
+        recordNoMin = ctx.getInt(OPTION_MIN);
+        recordNoMax = ctx.getInt(OPTION_MAX);
     }
-    
+
     @Override
     public boolean test(int i) {
         return recordNoMin <= i && i <= recordNoMax;

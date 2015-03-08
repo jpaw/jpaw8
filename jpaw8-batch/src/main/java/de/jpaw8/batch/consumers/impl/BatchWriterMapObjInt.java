@@ -7,7 +7,7 @@ import de.jpaw8.function.ObjIntFunction;
 public class BatchWriterMapObjInt<E,R> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super R> consumer;
     private final ObjIntFunction<E,R> function;
-    
+
     public BatchWriterMapObjInt(BatchWriter<? super R> consumer, ObjIntFunction<E,R> function) {
         super(consumer);
         this.consumer = consumer;

@@ -8,7 +8,7 @@ import de.jpaw8.batch.factories.BatchLinked;
 public class BatchWriterMap<E,R> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super R> consumer;
     private final Function<? super E, ? extends R> function;
-    
+
     public BatchWriterMap(BatchWriter<? super R> consumer, Function<? super E, ? extends R> function) {
         super(consumer);
         this.consumer = consumer;

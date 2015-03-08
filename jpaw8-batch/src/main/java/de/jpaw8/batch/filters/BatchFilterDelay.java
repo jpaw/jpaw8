@@ -12,7 +12,7 @@ public class BatchFilterDelay implements IntPredicate, CmdlineCallback {
     static private final String OPTION = "delay";
     final String prefix;
     int delay = 0;
-    
+
     /** hardcoded delay. */
     public BatchFilterDelay(int milliseconds) {
         delay = milliseconds >= 0 ? milliseconds : 0;
@@ -26,7 +26,7 @@ public class BatchFilterDelay implements IntPredicate, CmdlineCallback {
             .addFlaggedOption(prefix + OPTION, JSAP.INTEGER_PARSER, "0", JSAP.NOT_REQUIRED, JSAP.NO_SHORTFLAG, "number of ms delay between repetitions")
             .registerCallback(this);
     }
-    
+
     /** Delay specified by command line, no prefix. (Can I have parameter default values, some time?) */
     public BatchFilterDelay() {
         this(null);
@@ -34,9 +34,9 @@ public class BatchFilterDelay implements IntPredicate, CmdlineCallback {
 
     @Override
     public void readParameters(CmdlineParserContext ctx) {
-        delay = ctx.getInt(prefix + OPTION); 
+        delay = ctx.getInt(prefix + OPTION);
     }
-    
+
     @Override
     public boolean test(int i) {
         try {

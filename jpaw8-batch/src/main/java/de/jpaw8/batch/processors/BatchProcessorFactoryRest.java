@@ -19,7 +19,7 @@ public class BatchProcessorFactoryRest<X> implements BatchProcessorFactory<X,X>,
     private final BatchMarshaller<X> immutableMarshaller;
     private int bufferSize = 1024 * 1024;
     private URL url = null;
-    
+
     private BatchProcessorFactoryRest(BatchMarshallerFactory<X> marshallerFactory, BatchMarshaller<X> immutableMarshaller) {
         this.immutableMarshaller = immutableMarshaller;
         this.marshallerFactory = marshallerFactory;
@@ -28,7 +28,7 @@ public class BatchProcessorFactoryRest<X> implements BatchProcessorFactory<X,X>,
             .addFlaggedOption("buffersize", JSAP.INTEGER_PARSER, "1000000", JSAP.NOT_REQUIRED, 'B', "buffer size for REST requests")
             .registerCallback(this);
     }
-    
+
     public BatchProcessorFactoryRest(BatchMarshallerFactory<X> marshallerFactory) {
         this(marshallerFactory, null);
     }
@@ -61,23 +61,23 @@ public class BatchProcessorFactoryRest<X> implements BatchProcessorFactory<X,X>,
         return new BatchProcessorRest<X>(bufferSize, url,
                 immutableMarshaller != null ? immutableMarshaller : marshallerFactory.getMarshaller(threadNo));
     }
-    
+
     private static class BatchProcessorRest<X> implements BatchProcessor<X,X> {
         private final byte [] buffer;
         private final URL url;
         private final BatchMarshaller<X> marshaller;
-        
+
         private BatchProcessorRest(int bufferSize, URL url, BatchMarshaller<X> marshaller) {
             buffer = new byte [bufferSize];
             this.url = url;
             this.marshaller = marshaller;
         }
-        
+
         @Override
         public X process(X data, int recordNo) throws Exception {
             // get the raw data
             byte [] payload = marshaller.marshal(data);
-            
+
             // 1.) create a connection to the target. This does not use any of the above SSL context.
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -92,7 +92,7 @@ public class BatchProcessorFactoryRest<X> implements BatchProcessorFactory<X,X>,
 
             int length = 0;
             try (DataOutputStream wr = new DataOutputStream(connection.getOutputStream())) {
-                
+
                 wr.write(payload);
                 // marshaller.marshal(data, connection.getOutputStream()); // unfortunately we need the length
 
@@ -106,7 +106,7 @@ public class BatchProcessorFactoryRest<X> implements BatchProcessorFactory<X,X>,
                     }
                 }
             }
-            
+
             return marshaller.unmarshal(buffer, length);
         }
     }

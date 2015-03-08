@@ -27,10 +27,10 @@ public class BatchReaderNewThreadsViaQueue<E> extends BatchLinked implements Bat
     private int bufferSize = 1024;
     private int numThreads = 1;
     private long timeout = 300L;
-    private BlockingQueue<DataWithOrdinal<E>> inputQueue = null; 
+    private BlockingQueue<DataWithOrdinal<E>> inputQueue = null;
 
     private final CmdlineParserContext ctx;
-    
+
     /** Threads determined by command line. */
     public BatchReaderNewThreadsViaQueue(BatchReader<? extends E> producer) {
         super(producer);
@@ -40,7 +40,7 @@ public class BatchReaderNewThreadsViaQueue<E> extends BatchLinked implements Bat
         ctx.addFlaggedOption("queuesize", JSAP.INTEGER_PARSER, "1024", JSAP.NOT_REQUIRED, JSAP.NO_SHORTFLAG, "queue size");
         ctx.addFlaggedOption("timeout",   JSAP.INTEGER_PARSER,  "300", JSAP.NOT_REQUIRED, 'w', "maximum wait time per record, before a timeout occurs, in seconds, default 300 (5 minutes)");
     }
-    
+
     /** hardcoded number of threads. */
     public BatchReaderNewThreadsViaQueue(BatchReader<? extends E> producer, int bufferSize, int numThreads) {
         super(producer);
@@ -49,8 +49,8 @@ public class BatchReaderNewThreadsViaQueue<E> extends BatchLinked implements Bat
         this.numThreads = numThreads;
         ctx = null;
     }
-    
-    
+
+
     private class ReaderCallback implements ObjIntConsumer<E> {
         @Override
         public void accept(E response, int no) {
@@ -66,7 +66,7 @@ public class BatchReaderNewThreadsViaQueue<E> extends BatchLinked implements Bat
             }
         }
     }
-    
+
     @Override
     public void produceTo(BatchWriterFactory<? super E> consumerFactory) throws Exception {
         if (ctx != null) {
@@ -85,11 +85,11 @@ public class BatchReaderNewThreadsViaQueue<E> extends BatchLinked implements Bat
 
         // create an executorService
         ExecutorService threads = Executors.newFixedThreadPool(numThreads);
-        
+
         inputQueue = new ArrayBlockingQueue<DataWithOrdinal<E>>(bufferSize);
         // set up the callables
         ABQCollector<E> [] handlerTab = new ABQCollector [numThreads];
-        
+
         for (int i = 0; i < numThreads; ++i) {
             ABQCollector<E> task = new ABQCollector<E>(consumerFactory.get(i), inputQueue);
             handlerTab[i] = task;
@@ -98,16 +98,16 @@ public class BatchReaderNewThreadsViaQueue<E> extends BatchLinked implements Bat
 
         // kick off the sender
         producer.produceTo(new ReaderCallback());
-        
+
         // tell them it's done. every collector will collect one EOF object and then terminate itself
         DataWithOrdinal<E> eofObj = new DataWithOrdinal<E>(null, DataWithOrdinal.EOF);
         for (int i = 0; i < numThreads; ++i) {
             inputQueue.put(eofObj);
         }
-        
+
         // shutdown the Executor
         threads.shutdown();
-        
+
         // wait for tasks to have completed (essential because we want to cleanup the next pipeline steps)
         threads.awaitTermination(15, TimeUnit.MINUTES);
     }

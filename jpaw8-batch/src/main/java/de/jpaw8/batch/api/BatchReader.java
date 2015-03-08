@@ -36,9 +36,9 @@ public interface BatchReader<E> extends BatchIO {
     static public <F> BatchReaderIterable<F> of(Iterable<F> iter) {
         return new BatchReaderIterable<F>(iter);
     }
-    
-    
-    
+
+
+
     // filter
 
     default public BatchReader<E> filter(Predicate<? super E> filter) {
@@ -50,20 +50,20 @@ public interface BatchReader<E> extends BatchIO {
     default public BatchReader<E> filter(ObjIntPredicate<? super E> biFilter) {
         return new BatchReaderFilterObjInt<E>(this, biFilter);
     }
-    
-    
+
+
 
     // map
-    
+
     default public <F> BatchReader<F> map(Function<E,F> function) {
         return new BatchReaderMap<E,F>(this, function);
     }
     default public <F> BatchReader<F> map(ObjIntFunction<E,F> function) {
         return new BatchReaderMapObjInt<E,F>(this, function);
     }
-    
-    
-    
+
+
+
     // forEach
 
     default public Batch<E> forEach(Consumer<? super E> consumer) {
@@ -84,15 +84,15 @@ public interface BatchReader<E> extends BatchIO {
     default public void run() throws Exception {
         discard().run();       // just a synonym
     }
-    
-    
-    
+
+
+
     // thread splitter
-    
+
     default public <F> BatchReader<E> newThread() {
         return new BatchReaderNewThread<E>(this, 1024);
     }
-    
+
     // execute parallel sinks (corresponds to forEach)
     default public Batches<E> parallel(BatchWriterFactory<? super E> writers) {
         return new Batches<E>(new BatchReaderNewThreads<E>(this), writers);

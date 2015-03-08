@@ -21,42 +21,42 @@ public class BatchWriterNewThread <E> extends BatchLinked implements BatchWriter
     private ExecutorService threads = null;
     private Disruptor<DataWithOrdinal<E>> disruptor = null;
     private RingBuffer<DataWithOrdinal<E>> rb = null;
-    
+
     private final EventFactory<DataWithOrdinal<E>> factory = new TheEventFactory<E>();
-    
+
     public BatchWriterNewThread(BatchWriter<? super E> consumer, int bufferSize) {
         super(consumer);
         this.consumer = consumer;
         this.bufferSize = bufferSize;
         numThreads = 1;
     }
-    
+
     public BatchWriterNewThread(BatchWriter<? super E> consumer, int bufferSize, int numThreads) {
         super(consumer);
         this.consumer = consumer;
         this.bufferSize = bufferSize;
         this.numThreads = numThreads;
     }
-    
+
     @Override
     public void open() throws Exception {
         // create an executorService
         threads = (numThreads <= 1) ? Executors.newSingleThreadExecutor() : Executors.newFixedThreadPool(numThreads) ;
-        
+
         // Construct the Disruptor which interfaces the decoder to DB storage
         disruptor = new Disruptor<DataWithOrdinal<E>>(factory, bufferSize, threads);
-        
+
         // Connect the handler - ST
         EventHandler<DataWithOrdinal<E>> handler = (data, sequence, isLast) -> consumer.store(data.data, data.recordno);
         disruptor.handleEventsWith(handler);
-        
+
         // Connect the handler - MT - notice the difference between EventHandler (all get the same record) and WorkHandler (only one of all gets the recod)
 //        WorkHandler<DataWithOrdinal<E>> [] handlerTab = new WorkHandler [numThreads];
 //        for (int i = 0; i < numThreads; ++i)
 //            handlerTab[i] = (data) -> whereToPut.accept(data.data, data.recordno);
 //        disruptor.handleEventsWithWorkerPool(handlerTab);
 
-        
+
         // Start the Disruptor, starts all threads running
         // and get the ring buffer from the Disruptor to be used for publishing.
         rb = disruptor.start();
@@ -83,7 +83,7 @@ public class BatchWriterNewThread <E> extends BatchLinked implements BatchWriter
 
         // shutdown the Executor
         threads.shutdown();
-        
+
         // cleanup, allow GC to collect
         threads = null;
         rb = null;

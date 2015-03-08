@@ -13,7 +13,7 @@ import de.jpaw8.batch.lmax.DataWithOrdinal;
 /** ArrayBlockingQueue collector. */
 public class ABQCollector<E> implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(ABQCollector.class);
-    
+
     private final BatchWriter<? super E> consumer;
     private final BlockingQueue<DataWithOrdinal<E>> queue;
 
@@ -21,13 +21,13 @@ public class ABQCollector<E> implements Runnable {
         this.consumer = consumer;
         this.queue = queue;
     }
-    
-    
+
+
     @Override
     public void run() {
         int numProcessed = 0;
         int numExceptions = 0;
-        
+
         while (true) {
             DataWithOrdinal<E> newRecord = null;
             try {
@@ -36,7 +36,7 @@ public class ABQCollector<E> implements Runnable {
                 // interrupt means end of processing, we are done!
                 break;
             }
-            if (newRecord.recordno == DataWithOrdinal.EOF)  // record number -1 means EOF 
+            if (newRecord.recordno == DataWithOrdinal.EOF)  // record number -1 means EOF
                 break;
             // we got a record
             ++numProcessed;
