@@ -15,7 +15,7 @@ public class BatchReaderMap<E,R> extends BatchLinked implements BatchReader<R> {
         this.producer = producer;
         this.function = function;
     }
-    
+
     @Override
     public void produceTo(final ObjIntConsumer<? super R> whereToPut) throws Exception {
         producer.produceTo((data, i) -> whereToPut.accept(function.apply(data), i));

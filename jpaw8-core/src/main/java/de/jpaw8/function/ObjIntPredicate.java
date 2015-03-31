@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 @FunctionalInterface
 public interface ObjIntPredicate<T> {
     public boolean test(T obj, int n);
-    
+
     /**
      * Returns a predicate that represents the logical negation of this
      * predicate.
@@ -20,7 +20,7 @@ public interface ObjIntPredicate<T> {
         return (t, n) -> !test(t, n);
     }
 
-    
+
     /**
      * Returns a composed predicate that represents a short-circuiting logical
      * AND of this predicate and another.  When evaluating the composed

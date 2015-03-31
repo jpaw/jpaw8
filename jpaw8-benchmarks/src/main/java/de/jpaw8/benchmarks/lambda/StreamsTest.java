@@ -32,12 +32,12 @@ import de.jpaw8.batch.producers.BatchReaderRange;
 @BenchmarkMode(Mode.AverageTime)
 public class StreamsTest {
     public static final long NUM = 10000;
-    
 
-//    
-//  Benchmarks to measure the overhead to run a loop, in standard and in lambda mode 
-//    
-    
+
+//
+//  Benchmarks to measure the overhead to run a loop, in standard and in lambda mode
+//
+
     @Benchmark
     public void javaStreamSequentialMap(Blackhole bh) {
         LongStream.rangeClosed(1, NUM)         .map(l -> l* l).forEach(l -> bh.consume(l));

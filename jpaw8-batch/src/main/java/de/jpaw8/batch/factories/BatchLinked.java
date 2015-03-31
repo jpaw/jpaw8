@@ -11,7 +11,7 @@ public abstract class BatchLinked implements BatchIO {
     protected BatchLinked(BatchIO producer) {
         myProducer = producer;
     }
-    
+
     @Override
     public void open() throws Exception {
         myProducer.open();

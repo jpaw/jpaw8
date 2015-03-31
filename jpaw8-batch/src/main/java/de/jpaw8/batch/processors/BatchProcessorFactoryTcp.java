@@ -29,7 +29,7 @@ public class BatchProcessorFactoryTcp<X> implements BatchProcessorFactory<X,X>, 
     private int port = 80;
     private boolean useSsl = false;
     private InetAddress addr;
-    
+
     private BatchProcessorFactoryTcp(BatchMarshallerFactory<X> marshallerFactory, BatchMarshaller<X> immutableMarshaller) {
         this.immutableMarshaller = immutableMarshaller;
         this.marshallerFactory = marshallerFactory;
@@ -57,7 +57,7 @@ public class BatchProcessorFactoryTcp<X> implements BatchProcessorFactory<X,X>, 
         this.useSsl = useSsl;
         this.bufferSize = buffersize;
     }
-    
+
     @Override
     public void readParameters(CmdlineParserContext ctx) {
         bufferSize = ctx.getInt("buffersize");
@@ -65,7 +65,7 @@ public class BatchProcessorFactoryTcp<X> implements BatchProcessorFactory<X,X>, 
         useSsl = ctx.getBoolean("ssl");
         addr = ctx.getInetAddress("host");
     }
-    
+
     private static void printSocketInfo(SSLSocket s) {
         LOG.info("Socket class: " + s.getClass());
         LOG.info("   Remote address = " + s.getInetAddress().toString());
@@ -97,24 +97,24 @@ public class BatchProcessorFactoryTcp<X> implements BatchProcessorFactory<X,X>, 
         return new BatchProcessorTcp<X>(bufferSize, conn,
                 immutableMarshaller != null ? immutableMarshaller : marshallerFactory.getMarshaller(threadNo));
     }
-    
+
     private static class BatchProcessorTcp<X> implements BatchProcessor<X,X> {
         private final Socket conn;
         private final byte [] responseBuffer;
         private final BatchMarshaller<X> marshaller;
-        
+
         private BatchProcessorTcp(int bufferSize, Socket conn, BatchMarshaller<X> marshaller) {
             responseBuffer = new byte [bufferSize];
             this.marshaller = marshaller;
             this.conn = conn;
         }
-        
+
         @Override
         public X process(X data, int recordNo) throws Exception {
             // get the raw data
-            boolean foundDelimiter = false; 
+            boolean foundDelimiter = false;
             byte delimiter = marshaller.getDelimiter();
-            
+
 //          byte [] payload = marshaller.marshal(data);
 //          conn.getOutputStream().write(payload);
             marshaller.marshal(data, conn.getOutputStream());
@@ -134,7 +134,7 @@ public class BatchProcessorFactoryTcp<X> implements BatchProcessorFactory<X,X>, 
             } while (!foundDelimiter);
             if (haveBytes <= 0)
                 return null;
-            
+
             return marshaller.unmarshal(responseBuffer, haveBytes);
         }
     }

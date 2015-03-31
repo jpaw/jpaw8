@@ -27,12 +27,12 @@ import org.openjdk.jmh.infra.Blackhole;
 @OperationsPerInvocation(TimeTest.OPERATIONS_PER_INVOCATION)
 public class TimeTest {
     static public final int OPERATIONS_PER_INVOCATION = 100000;
-    
 
-//    
-//  Benchmarks to measure the overhead to get a timestamp, for Joda and Java8 time 
-//    
-    
+
+//
+//  Benchmarks to measure the overhead to get a timestamp, for Joda and Java8 time
+//
+
     @Benchmark
     public void javaSystem(Blackhole bh) {
         for (int i = 0; i < OPERATIONS_PER_INVOCATION; ++i) {
@@ -61,9 +61,9 @@ public class TimeTest {
         }
     }
 
-    
-    
-    
+
+
+
     // requires Java 8 support
     @Benchmark
     public void javaNow(Blackhole bh) {
@@ -71,7 +71,7 @@ public class TimeTest {
             bh.consume(java.time.LocalDateTime.now());
         }
     }
-    
+
     // requires Java 8 support
     @Benchmark
     public void javaNowUTC(Blackhole bh) {
@@ -79,7 +79,7 @@ public class TimeTest {
             bh.consume(java.time.LocalDateTime.now(java.time.ZoneId.of("Z")));
         }
     }
-    
+
     // requires Java 8 support
     @Benchmark
     public void javaNowInstant(Blackhole bh) {
@@ -87,10 +87,10 @@ public class TimeTest {
             bh.consume(java.time.Instant.now());
         }
     }
-    
-    
-    
-    
+
+
+
+
 
     @Benchmark
     public void jodaNew(Blackhole bh) {

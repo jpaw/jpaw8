@@ -6,7 +6,7 @@ import de.jpaw8.batch.api.BatchReader;
 
 public class BatchReaderRange implements BatchReader<Long> {
     final long from, to;
-    
+
     public BatchReaderRange(long from, long to) {
         this.from = from;
         this.to = to;

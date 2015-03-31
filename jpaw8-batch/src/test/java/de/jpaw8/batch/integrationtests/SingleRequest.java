@@ -24,7 +24,7 @@ import de.jpaw8.batch.producers.impl.BatchReaderNewThreadsViaQueue;
 public class SingleRequest {
     static private class Adder implements Consumer<Long> {
         long sum = 0L;
-        
+
         @Override
         public void accept(Long t) {
 //            System.out.println("Got  " + t);
@@ -33,7 +33,7 @@ public class SingleRequest {
     }
     static private class Counter implements Consumer<Object> {
         int num = 0;
-        
+
         @Override
         public void accept(Object t) {
             ++num;
@@ -41,14 +41,14 @@ public class SingleRequest {
     }
     static private class ParallelCounter implements Consumer<Object> {
         AtomicInteger num = new AtomicInteger();
-        
+
         @Override
         public void accept(Object t) {
             num.incrementAndGet();
         }
     }
     static private class Delay implements Predicate<Object> {
-        
+
         @Override
         public boolean test(Object t) {
             try {
@@ -60,7 +60,7 @@ public class SingleRequest {
         }
     }
     static private class DelayFunction<T> implements Function<T,T> {
-        
+
         @Override
         public T apply(T t) {
             try {
@@ -71,7 +71,7 @@ public class SingleRequest {
             return t;
         }
     }
-    
+
     @Test
     public void testCounterSimple() throws Exception {
         Counter a = new Counter();
@@ -99,7 +99,7 @@ public class SingleRequest {
         new BatchReaderRange(1L, 2000L).filter(l -> (l & 1) == 0L).map(l -> l * l).forEach(a).run();
         Assert.assertEquals(a.num, 1000);
     }
-    
+
     @Test
     public void testAdder() throws Exception {
         Adder a = new Adder();
@@ -137,7 +137,7 @@ public class SingleRequest {
         Assert.assertEquals(a.num, 10);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
-    
+
 //    @Test
 //    public void testCounterDelays4Parallel() throws Exception {
 //        ParallelCounter a = new ParallelCounter();
@@ -169,7 +169,7 @@ public class SingleRequest {
         Assert.assertEquals(a.num, 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
-    
+
     // expect 18 seconds
     @Test
     public void testCounterDelays3InConsumer() throws Exception {
@@ -181,7 +181,7 @@ public class SingleRequest {
         Assert.assertEquals(a.num, 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
-    
+
     // expect 7 seconds (18 / 3, plus 2 * 0.5 each for startup / shutdown
     @Test
     public void testCounterDelays3parallelInConsumer() throws Exception {
@@ -193,7 +193,7 @@ public class SingleRequest {
         Assert.assertEquals(a.num, 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
-    
+
     // expect 1.5 seconds: 12 / 4 * 0.5
     @Test
     public void testCounterParallel() throws Exception {
@@ -220,7 +220,7 @@ public class SingleRequest {
         Assert.assertEquals(ctr.num.get(), 12);
         System.out.println("Took " + (end.getTime() - start.getTime()) + " ms");
     }
-    
+
     // split to different threads and collecting the results again!
     @Test
     public void testCounterParallelAndMerge() throws Exception {
@@ -240,7 +240,7 @@ public class SingleRequest {
     @Test
     public void testCounterParallelAndMergeWithDelay() throws Exception {
         ParallelCounter ctr = new ParallelCounter();
-        
+
         BatchProcessorFactory<Long, Long> justADelay = new BatchProcessorFactoryByIdentity<>(new DelayFunction<Long>());
         BatchWriter<Object> consumer = new BatchWriterConsumer<Object>(ctr);
         Date start = new Date();

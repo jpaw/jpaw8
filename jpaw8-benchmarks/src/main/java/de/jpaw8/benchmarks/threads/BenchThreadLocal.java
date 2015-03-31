@@ -32,12 +32,12 @@ import org.openjdk.jmh.infra.Blackhole;
 @BenchmarkMode(Mode.AverageTime)
 public class BenchThreadLocal {
     public static final int NUM = 100;
-    
+
     private int n = 0;
     private Integer nn = 0;
     private AtomicInteger nnn = new AtomicInteger();
     private ThreadLocal<Integer> n4 = new ThreadLocal<Integer>();
-    
+
     @Benchmark
     public void javaPrimitive(Blackhole bh) {
         for (int i = 0; i < NUM; ++i) {
@@ -45,7 +45,7 @@ public class BenchThreadLocal {
             bh.consume(n * i);
         }
     }
-    
+
     @Benchmark
     public void javaWrapper(Blackhole bh) {
         for (int i = 0; i < NUM; ++i) {
@@ -53,7 +53,7 @@ public class BenchThreadLocal {
             bh.consume(nn * i);
         }
     }
-    
+
     @Benchmark
     public void javaAtomic(Blackhole bh) {
         for (int i = 0; i < NUM; ++i) {
@@ -61,7 +61,7 @@ public class BenchThreadLocal {
             bh.consume(z * i);
         }
     }
-    
+
     @Benchmark
     public void javaThreadLocal(Blackhole bh) {
         for (int i = 0; i < NUM; ++i) {

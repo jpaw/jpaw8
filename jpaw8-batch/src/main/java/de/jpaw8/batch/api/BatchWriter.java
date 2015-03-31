@@ -20,7 +20,7 @@ import de.jpaw8.function.ObjIntPredicate;
  * The accept() method is called in ordered or unordered sequence for every processed record.
  * If processing resulted in an exception, the data component of response will be null.
  * A single thread (or the main thread) will be allocated to writing.
- * 
+ *
  * This interface loosely corresponds to the Java 8 ObjIntConsumer<F> interface, but allows exceptions.
  * Linking is done via the BatchWriterLinked class.
  */
@@ -28,11 +28,11 @@ import de.jpaw8.function.ObjIntPredicate;
 @FunctionalInterface
 public interface BatchWriter<E> extends BatchIO {
     void store(E response, int no);
-    
+
     public static <X> BatchWriter<X> of(Consumer<X> consumer) {
         return new BatchWriterConsumer<X>(consumer);
     }
-    
+
     // filter
 
     default public BatchWriter<E> filteredFrom(Predicate<? super E> filter) {
@@ -44,11 +44,11 @@ public interface BatchWriter<E> extends BatchIO {
     default public BatchWriter<E> filteredFrom(ObjIntPredicate<? super E> biFilter) {
         return new BatchWriterFilterObjInt<E>(this, biFilter);
     }
-    
-    
+
+
 
     // map
-    
+
     default public <F> BatchWriter<F> mappedFrom(Function<F,E> function) {
         return new BatchWriterMap<F,E>(this, function);
     }
@@ -58,16 +58,16 @@ public interface BatchWriter<E> extends BatchIO {
     default public <F> BatchWriter<F> mappedFrom(BatchProcessor<F,E> function) {
         return new BatchWriterMapForProcessor<F,E>(this, function);
     }
-    
-    
-    
+
+
+
     // thread splitter
-    
+
     default public <F> BatchWriter<E> newThread() {
         return new BatchWriterNewThread<E>(this, 1024);
     }
     default public <F> BatchWriter<E> parallel(int numThreads) {
         return new BatchWriterNewThread<E>(this, 1024, numThreads);
     }
-    
+
 }

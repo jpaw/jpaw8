@@ -6,6 +6,6 @@ import java.util.function.ObjIntConsumer;
 public class Util {
     /** Converts a OrdinalConsumer to a Consumer */
     public static <X> ObjIntConsumer<X> asObjIntConsumer(final Consumer<X> c) {
-        return (X t, int i) -> c.accept(t); 
+        return (X t, int i) -> c.accept(t);
     }
 }

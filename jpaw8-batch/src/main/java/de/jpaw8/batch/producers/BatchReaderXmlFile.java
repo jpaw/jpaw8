@@ -14,7 +14,7 @@ import de.jpaw8.batch.producers.impl.BatchReaderFile;
 public class BatchReaderXmlFile<E> extends BatchReaderFile<E> {
     private final Class<E> targetClass;
     private final Unmarshaller u;
-    
+
     public BatchReaderXmlFile(JAXBContext context, Class<E> targetClass) throws JAXBException {
         this.targetClass = targetClass;
         u = context.createUnmarshaller();
@@ -23,7 +23,7 @@ public class BatchReaderXmlFile<E> extends BatchReaderFile<E> {
     @Override
     public void produceTo(ObjIntConsumer<? super E> whereToPut) throws Exception {
         int n = 0;
-        
+
         // this method is used to set up the parser
         XMLInputFactory f = XMLInputFactory.newInstance();
         XMLStreamReader r = f.createXMLStreamReader(uncompressedStream);

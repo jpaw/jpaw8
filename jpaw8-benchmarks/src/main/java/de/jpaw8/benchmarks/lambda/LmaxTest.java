@@ -35,10 +35,10 @@ import de.jpaw8.batch.producers.BatchReaderRange;
 @BenchmarkMode(Mode.AverageTime)
 public class LmaxTest {
     public static final long NUM = 10000;
-    
+
     private static class ConsumerFactory implements BatchWriterFactory<Object> {
         private final Blackhole bh;
-        
+
         private ConsumerFactory(Blackhole bh) {
             this.bh = bh;
         }
@@ -49,10 +49,10 @@ public class LmaxTest {
         }
     }
 
-//    
+//
 //  Benchmarks to measure the overhead of the disruptor
-//    
-    
+//
+
     @Benchmark
     public void jpawBatchLmaxMap(Blackhole bh) throws Exception {
         Batch<Long> sequence = new BatchReaderRange(1, NUM).newThread().forEach(l -> bh.consume(l));
@@ -75,7 +75,7 @@ public class LmaxTest {
         Batch<Long> sequence = new BatchReaderRange(1,  10).forEach(l -> bh.consume(l));
         sequence.runNoLog();
     }
-    
+
     @Benchmark
     public void jpawBatchParallelMap(Blackhole bh) throws Exception {
         Batches<Long> sequence = new BatchReaderRange(1, NUM).parallel(4, 128, new ConsumerFactory(bh));

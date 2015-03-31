@@ -8,7 +8,7 @@ import de.jpaw8.batch.factories.BatchLinked;
 public class BatchWriterFilterInt<E> extends BatchLinked implements BatchWriter<E> {
     private final BatchWriter<? super E> consumer;
     private final IntPredicate filter;
-    
+
     public BatchWriterFilterInt(BatchWriter<? super E> consumer, IntPredicate filter) {
         super(consumer);
         this.consumer = consumer;

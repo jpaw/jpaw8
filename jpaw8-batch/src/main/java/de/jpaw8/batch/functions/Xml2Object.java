@@ -11,7 +11,7 @@ import javax.xml.bind.Unmarshaller;
 public class Xml2Object<T> implements Function <String,T> {
     private final JAXBContext context;
     private final boolean threadSafe;       // if not (only sequential use), then the marshaller can be reused.
-    private final Class<T> baseClass; 
+    private final Class<T> baseClass;
     private Unmarshaller m = null;
 
     /** Command line configurable constructor. */
@@ -20,7 +20,7 @@ public class Xml2Object<T> implements Function <String,T> {
         this.baseClass = baseClass;
         this.threadSafe = threadSafe;
     }
-    
+
     private Unmarshaller createUnmarshaller() {
         Unmarshaller mm;
         try {

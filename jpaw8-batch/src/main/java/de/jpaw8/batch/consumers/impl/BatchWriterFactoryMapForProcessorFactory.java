@@ -9,13 +9,13 @@ import de.jpaw8.batch.factories.BatchLinked;
 public class BatchWriterFactoryMapForProcessorFactory<E,R> extends BatchLinked implements BatchWriterFactory<E> {
     private final BatchWriterFactory<? super R> consumer;
     private final BatchProcessorFactory<E,R> function;
-    
+
     public BatchWriterFactoryMapForProcessorFactory(BatchWriterFactory<? super R> consumer, BatchProcessorFactory<E,R> function) {
         super(consumer);
         this.consumer = consumer;
         this.function = function;
     }
-    
+
     @Override
     public void close() throws Exception {
         // first, close the function

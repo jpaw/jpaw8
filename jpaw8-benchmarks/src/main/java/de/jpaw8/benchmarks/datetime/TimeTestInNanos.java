@@ -35,16 +35,16 @@ import org.openjdk.jmh.infra.Blackhole;
 @BenchmarkMode(Mode.AverageTime)
 public class TimeTestInNanos {
 
-//    
-//  Benchmarks to measure the overhead to get a timestamp, for Joda and Java8 time 
-//    
+//
+//  Benchmarks to measure the overhead to get a timestamp, for Joda and Java8 time
+//
     // see: (old) http://stackoverflow.com/questions/19052316/why-is-system-nanotime-way-slower-in-performance-than-system-currenttimemill
     // see: (new) https://groups.google.com/forum/#!topic/mechanical-sympathy/44Pc1u0YU8I
     @Benchmark
     public void javaSystemNanoTime(Blackhole bh) {
         bh.consume(System.nanoTime());
     }
-    
+
     // see https://blogs.oracle.com/ksrini/entry/we_take_java_performance_very
     // http://bugs.java.com/view_bug.do?bug_id=6876279
     @Benchmark
@@ -72,19 +72,19 @@ public class TimeTestInNanos {
     public void javaNow(Blackhole bh) {
         bh.consume(java.time.LocalDateTime.now());
     }
-    
+
     // requires Java 8 support
     @Benchmark
     public void javaNowUTC(Blackhole bh) {
         bh.consume(java.time.LocalDateTime.now(java.time.ZoneId.of("Z")));
     }
-    
+
     // requires Java 8 support
     @Benchmark
     public void javaNowInstant(Blackhole bh) {
         bh.consume(java.time.Instant.now());
     }
-    
+
     @Benchmark
     public void jodaNew(Blackhole bh) {
         bh.consume(new org.joda.time.LocalDateTime());

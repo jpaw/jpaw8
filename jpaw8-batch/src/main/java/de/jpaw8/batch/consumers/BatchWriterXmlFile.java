@@ -23,14 +23,14 @@ public class BatchWriterXmlFile extends BatchWriterTextFileAbstract<Object> {
     public void open() throws Exception {
         super.open();
         formatted = ctx.getBoolean("formatted");
-        
+
         m = context.createMarshaller();
         if (formatted)
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         m.setProperty(Marshaller.JAXB_ENCODING, encoding.toString());
         m.setProperty(Marshaller.JAXB_FRAGMENT, true);
     }
-    
+
     @Override
     public void store(Object response, int no) {
         // marshall the object and write it to the output

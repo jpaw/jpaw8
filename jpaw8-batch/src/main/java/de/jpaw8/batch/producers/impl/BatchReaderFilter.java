@@ -15,7 +15,7 @@ public class BatchReaderFilter<E> extends BatchLinked implements BatchReader<E> 
         this.producer = producer;
         this.filter = filter;
     }
-    
+
     @Override
     public void produceTo(final ObjIntConsumer<? super E> whereToPut) throws Exception {
         producer.produceTo((data, i) -> { if (filter.test(data)) whereToPut.accept(data, i); });

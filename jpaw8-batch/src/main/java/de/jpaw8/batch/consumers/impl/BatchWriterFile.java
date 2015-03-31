@@ -24,14 +24,14 @@ abstract public class BatchWriterFile<Q> implements BatchWriter<Q> {
     private OutputStream rawStream = null;
     protected OutputStream uncompressedStream = null;  // the effective input. Subclasses can add buffering and decoding
     private final CmdlineParserContext ctx;
-    
+
     public BatchWriterFile() {
         ctx = CmdlineParserContext.getContext();
         ctx.addFlaggedOption("out", JSAP.STRING_PARSER, null, JSAP.NOT_REQUIRED, 'o', "output filename (extensions .gz and .zip are understood)");
         ctx.addSwitch("outzip", JSAP.NO_SHORTFLAG, "unzip output file on the fly");
-        ctx.addSwitch("outgzip", JSAP.NO_SHORTFLAG, "gunzip output file on the fly"); 
+        ctx.addSwitch("outgzip", JSAP.NO_SHORTFLAG, "gunzip output file on the fly");
     }
-    
+
     @Override
     public void open() throws Exception {
         useGzip = ctx.getBoolean("outgzip");
@@ -49,7 +49,7 @@ abstract public class BatchWriterFile<Q> implements BatchWriter<Q> {
             // fatal error, terminate
             System.exit(1);
         }
-        
+
         // command line parsed, now open the output (and check for writeability of file)
         // if the file does not exist, we terminate without doing anything
         if (filename == null) {
@@ -74,7 +74,7 @@ abstract public class BatchWriterFile<Q> implements BatchWriter<Q> {
             uncompressedStream = rawStream;
         }
     }
-    
+
     @Override
     public void close() throws Exception {
         if (useZip)
