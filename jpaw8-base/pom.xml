@@ -58,6 +58,7 @@
     
     <modules>
         <module>../jpaw8-bom/pom.xml</module>
+        <module>../jpaw8-xtend/pom.xml</module>
         <module>../jpaw8-core/pom.xml</module>
         <module>../jpaw8-batch/pom.xml</module>
         <module>../jpaw8-benchmarks/pom.xml</module>

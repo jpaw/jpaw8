@@ -24,6 +24,11 @@
         <dependencies>
             <dependency>
                 <groupId>de.jpaw</groupId>
+                <artifactId>jpaw8-xtend</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.jpaw</groupId>
                 <artifactId>jpaw8-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
