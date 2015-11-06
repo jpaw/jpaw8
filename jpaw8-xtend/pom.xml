@@ -5,22 +5,13 @@
     <parent>
         <groupId>de.jpaw</groupId>
         <artifactId>jpaw8-base</artifactId>
-        <version>1.1.5</version>
+    <version>1.1.5</version>
         <relativePath>../jpaw8-base/pom.xml</relativePath>
     </parent>
 
-    <artifactId>jpaw8-core</artifactId>
+    <artifactId>jpaw8-xtend</artifactId>
     <packaging>jar</packaging>
 
-    <description>Some extensions to the Java functional APIs</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>${testng.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
+    <description>extension for existing classes</description>
+    
 </project>
