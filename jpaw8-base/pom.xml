@@ -15,7 +15,7 @@
     <description>Common configuration settings for all jpaw basic / utility projects</description>
 
     <properties>
-        <hdrHistorgram.version>2.1.4</hdrHistorgram.version>
+        <hdrHistorgram.version>2.1.7</hdrHistorgram.version>
     </properties>
     
     <dependencyManagement>
