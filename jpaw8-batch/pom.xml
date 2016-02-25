@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
 
     <description>Jpaw batch processor API and basic implementations</description>
-    
+
     <build>
         <plugins>
             <plugin>

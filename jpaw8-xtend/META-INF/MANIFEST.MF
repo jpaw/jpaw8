@@ -7,4 +7,4 @@ Bundle-Version: 1.4.2.qualifier
 Bundle-Vendor: Michael Bischoff
 Export-Package: de.jpaw8.xtend
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8 
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

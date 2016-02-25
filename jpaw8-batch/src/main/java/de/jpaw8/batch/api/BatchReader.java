@@ -106,4 +106,3 @@ public interface BatchReader<E> extends BatchIO {
 //        return new Batches<E>(readers, writers);
 //    }
 }
-

@@ -12,14 +12,14 @@
     <packaging>pom</packaging>
 
     <description>JPAW Java 8 part bill of materials</description>
-    
+
     <!-- Define my own version as a convenience for users. Possibly not required. -->
-<!--     
+<!--
     <properties>
         <jpaw8.version>1.4.2-SNAPSHOT</jpaw8.version>
     </properties>
  -->
- 
+
     <dependencyManagement>
         <dependencies>
             <dependency>
