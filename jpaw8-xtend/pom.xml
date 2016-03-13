@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.jpaw</groupId>
         <artifactId>jpaw8-base</artifactId>
-    <version>1.4.1</version>
+    <version>1.4.2</version>
         <relativePath>../jpaw8-base/pom.xml</relativePath>
     </parent>
 
@@ -13,5 +13,5 @@
     <packaging>jar</packaging>
 
     <description>extension for existing classes</description>
-    
+
 </project>

@@ -36,9 +36,9 @@ public class CallJS {
         public int longNum;
         public String text;
     }
-    
+
     MyData data;
-    
+
     @Setup
     public void setUp() throws IOException, ScriptException {
         hornDriver.eval("var doubleIt = function(arg) { return arg.longNum * 2; }");

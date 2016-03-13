@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.function.ToIntFunction;
 
 public class CollectionExtensions {
-    
+
     /** Returns the collection element which has the maximum weight of all. */
     public static <T> T ofMaxWeight(Collection<T> list, ToIntFunction<? super T> evaluator) {
         int bestWeightSoFar = Integer.MIN_VALUE;
