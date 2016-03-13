@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>jpaw8-base</artifactId>
-    <version>1.4.2-SNAPSHOT</version>
+    <version>1.4.2</version>
     <packaging>pom</packaging>
 
     <description>Common configuration settings for all jpaw basic / utility projects</description>
