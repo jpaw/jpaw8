@@ -4,18 +4,18 @@
     <parent>
         <groupId>de.jpaw</groupId>
         <artifactId>jpaw-se-parent</artifactId>
-        <version>1.1.5</version>
+        <version>1.2.1</version>
         <relativePath/>
     </parent>
 
     <artifactId>jpaw8-base</artifactId>
-    <version>1.4.21</version>
+    <version>1.5.0</version>
     <packaging>pom</packaging>
 
     <description>Common configuration settings for all jpaw basic / utility projects</description>
 
     <properties>
-        <hdrHistorgram.version>2.1.7</hdrHistorgram.version>
+        <hdrHistogram.version>2.1.10</hdrHistogram.version>
     </properties>
 
     <dependencyManagement>
@@ -23,7 +23,7 @@
             <dependency>
                 <groupId>de.jpaw</groupId>
                 <artifactId>jpaw-bom</artifactId>
-                <version>1.5.22</version>
+                <version>1.6.0</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
