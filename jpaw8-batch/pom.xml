@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.jpaw</groupId>
         <artifactId>jpaw8-base</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
         <relativePath>../jpaw8-base/pom.xml</relativePath>
     </parent>
 
@@ -67,6 +67,24 @@
             <groupId>org.hdrhistogram</groupId>
             <artifactId>HdrHistogram</artifactId>
             <version>${hdrHistogram.version}</version>
+        </dependency>
+
+        <!-- required for Java 9 and later -->
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>javax.activation-api</artifactId>
+            <version>${activation.version}</version>
         </dependency>
 
         <dependency>
